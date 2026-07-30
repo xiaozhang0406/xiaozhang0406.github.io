@@ -1,39 +1,57 @@
-# Chirpy Starter
+# Yarinaoshi 的技术博客
 
-[![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)][gem]&nbsp;
-[![GitHub license](https://img.shields.io/github/license/cotes2020/chirpy-starter.svg?color=blue)][mit]
+基于 **Hexo** + **Butterfly** 主题搭建的个人技术博客。
 
-A minimal, ready-to-use template for creating a blog with the [**Chirpy**][chirpy] Jekyll theme. Get up and running in minutes with all critical files pre-configured.
+🔗 [yarinaoshi.top](https://yarinaoshi.top)
 
-## Why This Starter Exists
+## 技术栈
 
-When installing Chirpy through [RubyGems.org][gem], Jekyll can only read a subset of theme files (`_data`, `_layouts`, `_includes`, `_sass`, `assets`) and limited `_config.yml` options from the gem. As a result, users cannot enjoy the full out-of-the-box experience that Chirpy offers.
+- **框架**: [Hexo](https://hexo.io/) 5.x
+- **主题**: [Butterfly](https://butterfly.js.org/)
+- **部署**: GitHub Pages + GitHub Actions
+- **评论**: Giscus
 
-To unlock all features, the following files must be present in your Jekyll site:
+## 本地开发
 
-```shell
-.
-├── _config.yml
-├── _plugins
-├── _tabs
-└── index.html
+```bash
+# 安装依赖
+npm install
+
+# 启动本地预览
+npx hexo server
+
+# 生成静态文件
+npx hexo generate
+
+# 新建文章
+npx hexo new "文章标题"
 ```
 
-This starter bundles those files from the latest **Chirpy** release along with a [CD][CD] workflow, so you can start writing immediately.
+## 文章 Front Matter 示例
 
-## Usage
+```yaml
+---
+title: 文章标题
+date: 2026-07-30 09:00:00
+categories: 分类名
+tags: [标签1, 标签2]
+description: 文章描述
+---
+```
 
-Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wiki).
+## 目录结构
 
-## Contributing
+```
+source/
+├── _posts/          # 文章
+├── about/           # 关于页面
+├── categories/      # 分类页面
+├── tags/            # 标签页面
+├── archives/        # 归档页面
+├── img/             # 图片资源
+└── CNAME            # 自定义域名
+```
 
-This repository is automatically updated with new releases from the theme repository. If you encounter any issues or want to contribute to its improvement, please visit the [theme repository][chirpy] to provide feedback.
+## 回滚
 
-## License
-
-This work is published under [MIT][mit] License.
-
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy/
-[CD]: https://en.wikipedia.org/wiki/Continuous_deployment
-[mit]: https://github.com/cotes2020/chirpy-starter/blob/master/LICENSE
+如需回滚到 Jekyll Chirpy 版本，请参考 `backup/RECOVERY.md`。

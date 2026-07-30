@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bundle exec *)",
+      "Bash(curl -s https://api.github.com/repos/xiaozhang0406/xiaozhang0406.github.io/actions/runs?per_page=3)",
+      "Bash(curl -sI https://yarinaoshi.top)",
+      "Bash(curl -sI https://xiaozhang0406.github.io)",
+      "Bash(curl -sIL https://yarinaoshi.top)",
+      "Bash(curl -s http://yarinaoshi.top)",
+      "Bash(nslookup yarinaoshi.top)",
+      "Bash(curl -s https://api.github.com/repos/xiaozhang0406/xiaozhang0406.github.io/pages)",
+      "Bash(curl -v https://yarinaoshi.top)",
+      "Bash(curl -sL https://xiaozhang0406.github.io)",
+      "Bash(curl -sI http://xiaozhang0406.github.io)",
+      "Bash(curl -s --resolve xiaozhang0406.github.io:443:185.199.108.153 https://xiaozhang0406.github.io/)",
+      "Bash(curl -sI -H \"Accept: text/html\" https://yarinaoshi.top)",
+      "Bash(curl -sk https://yarinaoshi.top)",
+      "Bash(curl -s \"https://api.github.com/repos/xiaozhang0406/xiaozhang0406.github.io/actions/runs/30230402392/jobs\")",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f'{j[\\\\\"name\\\\\"]}: {j[\\\\\"conclusion\\\\\"]}'\\) for j in data.get\\('jobs',[]\\)]\")",
+      "Bash(curl -s \"https://api.github.com/repos/xiaozhang0406/xiaozhang0406.github.io/actions/runs/30230402392/jobs?per_page=30\")",
+      "Bash(curl -s \"https://api.github.com/repos/xiaozhang0406/xiaozhang0406.github.io/deployments?per_page=3\")",
+      "Bash(mkdir -p backup)",
+      "Bash(cp -r --parents .gitattributes .github/workflows/pages-deploy.yml Gemfile LICENSE README.md _config.yml _data/contact.yml _data/locales/zh-CN.yml _data/share.yml _plugins/posts-lastmod-hook.rb _posts/2026-07-22-hello-world.md _posts/2026-07-26-hello-yarinaoshi.md _posts/2026-07-27-Linux-Learning-Note.md _tabs/about.md _tabs/archives.md _tabs/categories.md _tabs/tags.md assets/img/avatar.png assets/img/favicons/apple-touch-icon.png assets/img/favicons/favicon-16x16.png assets/img/favicons/favicon-32x32.png assets/img/favicons/favicon.ico index.html tools/deploy.ps1 tools/deploy.sh tools/run.sh tools/test.sh backup/)",
+      "Bash(git commit -m 'backup: Jekyll Chirpy 完整快照备份 \\(HEAD: 60e3df1\\) *)",
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npx hexo-cli *)",
+      "Bash(mkdir -p .npm-cache)",
+      "Bash(npm config *)",
+      "Bash(npm cache *)",
+      "Bash(cd /tmp)",
+      "Bash(rm -rf hexo-temp)"
+    ]
+  }
+}
