@@ -263,7 +263,7 @@ footer:
     enable: true
     version: true
   # Custom footer text (supports HTML)
-  custom_text: <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">闽ICP备2026029739号</a>
+  custom_text: <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">闽ICP备2026029739号-1</a>
 
 # --------------------------------------
 # Aside Settings
@@ -1068,6 +1068,15 @@ css_prefix: true
 inject:
   head:
     # - <link rel="stylesheet" href="/xxx.css">
+    - >-
+      <style>
+      /* 友链卡片 descr 支持多行显示（仅含 <br> 的卡片） */
+      .flink-list .flink-list-item:has(br) { height: auto; min-height: 90px; }
+      .flink-list .flink-list-item:has(br) .flink-item-desc {
+        height: auto; min-height: 50px;
+        white-space: normal; overflow: visible; text-overflow: clip;
+      }
+      </style>
   bottom:
     # - <script src="xxxx"></script>
 
