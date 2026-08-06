@@ -1,0 +1,19 @@
+- class_name: 友情链接
+  class_desc: 欢迎互换友链，以下是一些示例
+  link_list:
+    - name: Yarinaoshi
+      link: https://yarinaoshi.top
+      avatar: /img/avatar.png
+      descr: PCB / Embedded / Linux / Java / Minecraft
+
+- class_name: 框架与主题
+  class_desc: 本站使用的框架和主题
+  link_list:
+    - name: Butterfly
+      link: https://butterfly.js.org/
+      avatar: https://butterfly.js.org/img/avatar.png
+      descr: 简单好用、功能丰富的 Hexo 主题
+    - name: Hexo
+      link: https://hexo.io/
+      avatar: https://hexo.io/favicon.ico
+      descr: 快速、简洁且高效的博客框架
