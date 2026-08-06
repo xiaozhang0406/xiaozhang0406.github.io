@@ -11,7 +11,7 @@
       descr: 想写点什么，如果不写的话，<br>很快就找不到啦
     - name: akatsuki-kaze's blog
       link: http://akatsuki-kaze.com.cn/
-      avatar: http://akatsuki-kaze.com.cn/images/avatar.jpg
+      avatar: /img/xiaofeng-avatar.jpg
       descr: A personal blog
 
 - class_name: 框架与主题
