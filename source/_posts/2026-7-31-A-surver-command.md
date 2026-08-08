@@ -4,6 +4,7 @@ date: 2026-07-31 16:00:00
 categories: 杂谈
 tags: [服务器]
 author: Yarinaoshi
+published: false
 description: 在某个服务器潜水五年的老玩家，离开前的告别与总结。
 ---
 
