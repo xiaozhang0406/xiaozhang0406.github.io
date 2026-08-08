@@ -1,5 +1,5 @@
 - class_name: 友情链接
-  class_desc: 欢迎互换友链，以下是一些示例
+  class_desc: 欢迎互换友链
   link_list:
     - name: Yarinaoshi
       link: https://yarinaoshi.top
