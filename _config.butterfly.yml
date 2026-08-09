@@ -288,7 +288,7 @@ aside:
       enable: true
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/xxxxxx
+      link: https://github.com/xiaozhang0406
   card_announcement:
     enable: true
     content: 控制成本的试错是最好的成长方式。
