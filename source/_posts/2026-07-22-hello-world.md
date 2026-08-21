@@ -4,6 +4,7 @@ date: 2026-07-22 20:00:00
 categories: 杂谈
 tags: [博客]
 author: 冰可乐
+
 description: 用 Butterfly 主题 + Hexo + GitHub Pages 搭的个人技术博客，记录硬件、Linux、MC 服务器的折腾历程。
 ---
 ## 博客搭好了 🎉

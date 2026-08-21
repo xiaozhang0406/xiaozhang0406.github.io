@@ -4,6 +4,7 @@ date: 2026-07-31 16:00:00
 categories: 杂谈
 tags: [思隙小记]
 author: Yarinaoshi
+published: false
 description: 关于为什么选择写博客、博客于我的意义，以及一片互联网自留地的向往。
 ---
 似乎现在大家都习惯于完整的东西，不习惯说有不完美/不完整的东西，
