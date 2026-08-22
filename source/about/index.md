@@ -8,8 +8,8 @@ type: about
 
 👋 你好，我是 **Yarinaoshi**。
 
-- 🏫 福建理工大学 工业工程专业 大一在读
-- 🔧 硬件工程方向：PCB 设计、电力电子、嵌入式开发
+- 🏫 福建理工大学 工业工程专业 大二在读
+- 🔧 硬件工程学习方向：PCB 设计、电力电子、嵌入式开发
 - 🐧 Linux / 运维 学习中
 - 🎮 Minecraft 服务器搭建 & 管理
 - ☁️ 正在向软件/运维方向扩展技能树
@@ -24,3 +24,4 @@ type: about
 
 - GitHub: [@xiaozhang0406](https://github.com/xiaozhang0406)
 - Email: `xiaozhang0406@proton.me`
+- QQ: 3357728637
