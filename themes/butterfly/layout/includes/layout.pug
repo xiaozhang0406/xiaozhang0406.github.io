@@ -56,4 +56,8 @@ html(lang=config.language data-theme=theme.display_mode class=htmlClassHideAside
         !=partial('includes/footer', {}, {cache: true})
 
     include ./rightside.pug
-    include ./additional-js.pug
+    if page.type === 'moments-editor'
+      script(src=url_for('/js/utils.js'))
+      script(src=url_for('/js/main.js'))
+    else
+      include ./additional-js.pug

@@ -22,6 +22,7 @@ menu:
   Archives: /archives/ || fas fa-archive
   Categories: /categories/ || fas fa-stream
   Tags: /tags/ || fas fa-tags
+  碎碎念: /moments/ || fas fa-comment-dots
   Link: /link/ || fas fa-link
   About: /about/ || fas fa-info-circle
 

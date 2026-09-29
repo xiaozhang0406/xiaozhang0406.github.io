@@ -1,0 +1,77 @@
+extends includes/layout.pug
+
+block content
+  #page.moments-page.moments-editor.nc(data-owner='xiaozhang0406' data-repo='xiaozhang0406.github.io' data-branch='main' data-public-url=url_for('/moments/') data-avatar=url_for(theme.avatar.img) data-author=config.author)
+    .moments-editor-heading
+      div
+        a.moments-back(href=url_for('/moments/'))
+          i.fas.fa-arrow-left(aria-hidden='true')
+          |  返回碎碎念
+        h1 写碎碎念
+        p.moments-muted 不用想好标题，记录此刻就好。
+      span.moments-private
+        i.fas.fa-lock(aria-hidden='true')
+        |  博主发布
+    section.moment-card.moments-auth(aria-label='发布授权')
+      .moments-auth-top
+        div
+          strong#moments-account 尚未连接 GitHub
+          p#moments-auth-description.moments-muted 先写好内容，连接后就能发布到博客。
+        button#moments-logout.moments-secondary(type='button' hidden) 退出连接
+      details#moments-login-panel
+        summary.moments-text-link 连接 GitHub
+        .moments-login-body
+          p 用你的 GitHub 博客仓库保存文字和图片。
+          ol.moments-login-steps
+            li
+              a(href='https://github.com/settings/personal-access-tokens/new?name=Yarinaoshi%20Moments&target_name=xiaozhang0406&expires_in=30&contents=write' target='_blank' rel='noopener noreferrer') 在 GitHub 创建发布授权
+              | ，选择 Only select repositories。
+            li 仅选择 xiaozhang0406.github.io，确认 Contents 为 Read and write。
+            li 将生成的授权凭据粘贴到下方，然后连接。
+          form#moments-login-form
+            label(for='moments-token') GitHub 发布授权凭据
+            .moments-login-fields
+              input#moments-token(type='password' autocomplete='off' spellcheck='false' placeholder='仅在这里粘贴，不要发到聊天里' required)
+              button#moments-login-button.moments-button(type='submit') 连接
+          p.moments-small 授权凭据只发送给 GitHub，仅在当前页面内使用；退出或刷新后需要重新连接。
+    .moments-editor-grid
+      section.moment-card.moments-compose(aria-label='编辑碎碎念')
+        form#moments-compose-form
+          label.moments-compose-label(for='moments-content') 此刻在想什么？
+          textarea#moments-content(rows='7' maxlength='4000' placeholder='一个想法、一件小事，或者今天拍到的画面……')
+          .moments-compose-meta
+            span
+              i.far.fa-clock(aria-hidden='true')
+              |  自动记录发布时间 · 北京时间
+            span#moments-counter 0 / 4000
+          #moments-attachments.moments-attachments(aria-label='已选择的图片')
+          .moments-compose-actions
+            label.moments-secondary.moments-upload(for='moments-images')
+              i.far.fa-image(aria-hidden='true')
+              |  添加图片
+            input#moments-images.moments-file-input(type='file' accept='image/jpeg,image/png,image/webp,image/gif' multiple)
+            span#moments-image-count.moments-small 纯文字也可以
+          p.moments-small 最多 9 张图片，支持 JPG、PNG、WebP、GIF；每张不超过 8 MB，总计不超过 32 MB。
+          .moments-publish-row
+            span.moments-small 发布后所有访客可见
+            button#moments-publish.moments-button(type='submit' disabled)
+              i.fas.fa-paper-plane(aria-hidden='true')
+              |  发布
+      aside.moments-preview-column(aria-label='发布效果预览')
+        .moments-preview-label
+          i.far.fa-eye(aria-hidden='true')
+          |  效果预览
+        article.moment-card.moment-entry.moments-preview
+          header.moment-header
+            img.moments-avatar(src=url_for(theme.avatar.img) alt='' width='40' height='40')
+            .moment-author
+              strong= config.author
+              time#moments-preview-time
+          p#moments-preview-content.moment-text.moments-muted 你写下的文字和选择的图片会显示在这里。
+          #moments-preview-images.moment-images
+        p.moments-small.moments-preview-note 这只是预览，点击「发布」后才会保存到博客。
+    p#moments-status.moments-status(role='status' aria-live='polite' hidden)
+    noscript
+      p.moment-card 网页编辑和发布需要启用 JavaScript。
+  script(src=url_for('/js/moments-store.js') defer)
+  script(src=url_for('/js/moments-editor.js') defer)

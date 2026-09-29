@@ -1,0 +1,55 @@
+extends includes/layout.pug
+
+block content
+  - const entries = moments_data(site.data.moments)
+  - let lastMonth = ''
+  #page.moments-page.nc
+    section.moment-card.moments-intro(aria-label='碎碎念简介')
+      .moments-intro-top
+        .moments-profile
+          img.moments-avatar(src=url_for(theme.avatar.img) alt=config.author width='48' height='48')
+          div
+            strong= config.author
+            .moments-muted 一些不成篇的日常
+        a.moments-button(href=url_for('/moments/edit/'))
+          i.fas.fa-pen(aria-hidden='true')
+          |  写一条
+      p.moments-intro-copy 零碎的想法、日常和偶尔拍到的画面。
+      .moments-intro-bottom
+        span
+          i.far.fa-comment-dots(aria-hidden='true')
+          |  #{entries.length} 条记录
+        span 随手记，慢慢攒。
+    if entries.length
+      section#moments-feed(aria-label='碎碎念时间线')
+        each entry in entries
+          if entry.month !== lastMonth
+            - lastMonth = entry.month
+            h2.moments-month= entry.month
+          article.moment-card.moment-entry(id='moment-' + entry.id)
+            header.moment-header
+              img.moments-avatar(src=url_for(theme.avatar.img) alt='' width='40' height='40' loading='lazy')
+              .moment-author
+                strong= config.author
+                a.moment-permalink(href='#moment-' + entry.id aria-label='此条记录的时间与链接')
+                  time(datetime=entry.createdAt title='北京时间（UTC+8）')= entry.displayDate
+            if entry.content
+              p.moment-text= entry.content
+            if entry.images.length
+              .moment-images(data-count=entry.images.length)
+                each image, index in entry.images
+                  a.moment-image(href=url_for(image.src) data-image-src=url_for(image.src) data-image-alt=image.alt aria-label='放大图片 ' + (index + 1))
+                    img(src=url_for(image.src) alt=image.alt loading='lazy' decoding='async')
+    else
+      section.moment-card.moments-empty(aria-label='还没有碎碎念')
+        .moments-empty-icon
+          i.far.fa-comment-dots(aria-hidden='true')
+        h2 留住一闪而过的念头
+        p 一句话、一张照片，都可以放在这里。
+        a.moments-text-link(href=url_for('/moments/edit/')) 写下第一条碎碎念
+          i.fas.fa-arrow-right(aria-hidden='true')
+  dialog#moments-lightbox.moments-lightbox(aria-label='查看大图')
+    button.moments-lightbox-close(type='button' aria-label='关闭大图') ×
+    img(alt='')
+    p.moments-lightbox-caption
+  script(src=url_for('/js/moments.js') defer)
