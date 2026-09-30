@@ -68,12 +68,8 @@
 .moments-back { font-size: 13px; }
 .moments-private { border: 1px solid var(--moments-border); border-radius: 20px; padding: 5px 12px; font-size: 12px; }
 .moments-auth p { margin: 5px 0 0; }
-.moments-auth details { margin-top: 14px; border-top: 1px solid var(--moments-border); padding-top: 12px; }
-.moments-auth summary { width: fit-content; }
-.moments-login-body { padding-top: 10px; font-size: 13px; }
-.moments-login-steps { padding-left: 20px; line-height: 2; }
-.moments-login-fields { display: flex; gap: 10px; margin: 8px 0; }
-.moments-login-fields input { flex: 1; min-width: 0; height: 42px; padding: 10px 12px; border: 1px solid var(--moments-border); border-radius: 6px; background: var(--global-bg); color: var(--font-color); font: inherit; }
+.moments-login-actions { margin-top: 16px; border-top: 1px solid var(--moments-border); padding-top: 16px; }
+.moments-login-actions p { margin-top: 9px; }
 .moments-editor-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: start; }
 .moments-compose-label { display: block; margin-bottom: 14px; font-size: 16px; font-weight: 500; }
 .moments-compose textarea { display: block; width: 100%; resize: vertical; min-height: 180px; padding: 14px 15px; border: 1px solid var(--moments-border); border-radius: 6px; background: var(--global-bg); color: var(--font-color); font: inherit; font-size: 14px; line-height: 1.9; }
@@ -114,8 +110,6 @@
   .moments-compose-meta { flex-wrap: wrap; gap: 5px; }
   .moments-editor-heading { align-items: flex-start; gap: 8px; }
   .moments-private { margin-top: 3px; white-space: nowrap; }
-  .moments-login-fields { flex-wrap: wrap; }
-  .moments-login-fields input { flex-basis: 100%; }
   .moments-auth-top { align-items: flex-start; }
   .moments-publish-row { gap: 8px; }
 }

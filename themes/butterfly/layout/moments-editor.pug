@@ -1,7 +1,7 @@
 extends includes/layout.pug
 
 block content
-  #page.moments-page.moments-editor.nc(data-owner='xiaozhang0406' data-repo='xiaozhang0406.github.io' data-branch='main' data-public-url=url_for('/moments/') data-avatar=url_for(theme.avatar.img) data-author=config.author)
+  #page.moments-page.moments-editor.nc(data-owner='xiaozhang0406' data-repo='xiaozhang0406.github.io' data-api='https://planner.yarinaoshi.top/moments-api' data-public-url=url_for('/moments/') data-avatar=url_for(theme.avatar.img) data-author=config.author)
     .moments-editor-heading
       div
         a.moments-back(href=url_for('/moments/'))
@@ -18,22 +18,9 @@ block content
           strong#moments-account 尚未连接 GitHub
           p#moments-auth-description.moments-muted 先写好内容，连接后就能发布到博客。
         button#moments-logout.moments-secondary(type='button' hidden) 退出连接
-      details#moments-login-panel
-        summary.moments-text-link 连接 GitHub
-        .moments-login-body
-          p 用你的 GitHub 博客仓库保存文字和图片。
-          ol.moments-login-steps
-            li
-              a(href='https://github.com/settings/personal-access-tokens/new?name=Yarinaoshi%20Moments&target_name=xiaozhang0406&expires_in=30&contents=write' target='_blank' rel='noopener noreferrer') 在 GitHub 创建发布授权
-              | ，选择 Only select repositories。
-            li 仅选择 xiaozhang0406.github.io，确认 Contents 为 Read and write。
-            li 将生成的授权凭据粘贴到下方，然后连接。
-          form#moments-login-form
-            label(for='moments-token') GitHub 发布授权凭据
-            .moments-login-fields
-              input#moments-token(type='password' autocomplete='off' spellcheck='false' placeholder='仅在这里粘贴，不要发到聊天里' required)
-              button#moments-login-button.moments-button(type='submit') 连接
-          p.moments-small 授权凭据只发送给 GitHub，仅在当前页面内使用；退出或刷新后需要重新连接。
+      .moments-login-actions#moments-login-panel
+        button#moments-login-button.moments-button(type='button') 使用 GitHub 登录
+        p.moments-small 在 GitHub 确认后即可发布；网页不会要求你粘贴凭据。
     .moments-editor-grid
       section.moment-card.moments-compose(aria-label='编辑碎碎念')
         form#moments-compose-form
@@ -73,5 +60,4 @@ block content
     p#moments-status.moments-status(role='status' aria-live='polite' hidden)
     noscript
       p.moment-card 网页编辑和发布需要启用 JavaScript。
-  script(src=url_for('/js/moments-store.js') defer)
-  script(src=url_for('/js/moments-editor.js') defer)
+  script(src=url_for('/js/moments-editor-v2.js') defer)
