@@ -1,4 +1,11 @@
 {
   "version": 1,
-  "entries": []
+  "entries": [
+    {
+      "id": "2962acfb-0cf7-4366-8cea-868a9e341810",
+      "content": "你好，这是一条测试",
+      "createdAt": "2026-09-30T11:39:19.345Z",
+      "images": []
+    }
+  ]
 }
