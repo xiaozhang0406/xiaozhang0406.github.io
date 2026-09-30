@@ -35,7 +35,8 @@ export default function Head({ isDark, setDark, scrollHeight }: Props) {
     <details className="preview-category-menu"><summary><i className="iconfont icon-fenlei" aria-hidden="true" />分类</summary><div>{categories.map(category => <Link key={category} to={`/category/${encodeURIComponent(category)}`}>{category}</Link>)}</div></details>
     {links.slice(2).map(link => <NavLink key={link.to} to={link.to}><i className={`iconfont ${link.icon}`} aria-hidden="true" />{link.label}</NavLink>)}
   </>;
-  return <header className={`memory-header${scrollHeight > 40 ? ' scrolled' : ''}`}>
+  const hasArticleCover = /^\/(posts|article)\//.test(location.pathname);
+  return <header className={`memory-header${hasArticleCover ? ' cover-header' : ''}${scrollHeight > 40 ? ' scrolled' : ''}`}>
     <TopMao currentScrollHeight={scrollHeight} />
     <div className="headContainer preview-head">
       <Link className="webTitle" to="/" aria-label="Yarinaoshi 博客首页"><h2><span className="firstTitle">{site.name}</span><span className="blog-suffix">Blog</span></h2></Link>
