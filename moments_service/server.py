@@ -8,6 +8,7 @@ import binascii
 import datetime as dt
 import hashlib
 import hmac
+import html
 import json
 import os
 from pathlib import Path
@@ -95,7 +96,8 @@ def github_request(url, method="GET", body=None, token=None, form=False):
         if error.code in (409, 422):
             raise PublicError("仓库正在更新或限制了发布，请稍后重试。", 409) from None
         raise PublicError("GitHub 暂时无法完成请求，请稍后重试。", 502) from None
-    except (urllib.error.URLError, TimeoutError):
+    except (urllib.error.URLError, TimeoutError) as error:
+        print(f"GitHub connection failed: {urllib.parse.urlparse(url).hostname} {type(error).__name__}", flush=True)
         raise PublicError("连接 GitHub 失败，内容仍保留在编辑框里。", 502) from None
 
 
@@ -360,9 +362,35 @@ class Handler(BaseHTTPRequestHandler):
                 return self.setup_callback(urllib.parse.parse_qs(parsed.query))
             self.send_json({"error": "页面不存在。"}, 404, origin)
         except PublicError as error:
+            if parsed.path == BASE_PATH + "/callback":
+                return self.auth_failed(error)
             self.send_json({"error": str(error)}, error.status, origin)
         except Exception:
+            if parsed.path == BASE_PATH + "/callback":
+                return self.auth_failed(PublicError("登录暂时未完成，请回到编辑页重新点击登录。", 502))
             self.send_json({"error": "服务暂时不可用，请稍后重试。"}, 502, origin)
+
+    def auth_failed(self, error):
+        origin = getattr(self, "auth_origin", FRONTEND)
+        payload = json.dumps({"source": "moments-auth", "ok": False, "error": str(error)}, ensure_ascii=False).replace("<", "\\u003c")
+        body = ("<!doctype html><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
+                "<title>登录暂时未完成</title><style>body{font-family:system-ui,sans-serif;background:#f7f9fb;color:#334155;"
+                "padding:24px}main{max-width:440px;margin:12vh auto;background:white;padding:32px;border-radius:12px;"
+                "box-shadow:0 4px 20px #0001}h1{font-size:24px}p{line-height:1.8}button{border:0;border-radius:6px;"
+                "background:#49b1f5;color:white;padding:12px 20px;cursor:pointer}</style><main><h1>登录暂时未完成</h1><p>"
+                + html.escape(str(error)) + "</p><p>编辑中的文字和图片还在原页面，回去后重新点击登录即可。</p>"
+                "<button id='back'>返回编辑页</button></main><script>const origin=" + json.dumps(origin) + ";"
+                "if(window.opener)window.opener.postMessage(" + payload + ",origin);"
+                "document.getElementById('back').onclick=()=>{if(window.opener)window.close();"
+                "else location.href=origin+'/moments/edit/'};</script>").encode("utf-8")
+        self.send_response(error.status)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def login(self, params):
         client_id, client_secret = credentials()
@@ -394,6 +422,7 @@ class Handler(BaseHTTPRequestHandler):
         if not saved or saved[0] < time.time() or not code or not hmac.compare_digest(state, self.cookie("moments_oauth") or ""):
             raise PublicError("GitHub 登录校验失败，请回到编辑页重试。", 403)
         _, verifier, origin = saved
+        self.auth_origin = origin
         client_id, client_secret = credentials()
         result = github_request("https://github.com/login/oauth/access_token", "POST", {
             "client_id": client_id, "client_secret": client_secret, "code": code,

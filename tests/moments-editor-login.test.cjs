@@ -60,3 +60,16 @@ test('only a message from the login service refreshes the session', async () => 
   assert.equal(app.element('content').value, '保留这段草稿');
   assert.equal(app.element('publish').disabled, false);
 });
+
+test('login failure displays the service message and preserves the draft', async () => {
+  const app = editor();
+  await new Promise(setImmediate);
+  app.element('content').value = '尚未发布的草稿';
+  app.windowEvents.get('message')({
+    origin: 'https://planner.yarinaoshi.top',
+    data: { source: 'moments-auth', ok: false, error: '连接 GitHub 暂时失败，请重新登录。' }
+  });
+  assert.equal(app.element('status').textContent, '连接 GitHub 暂时失败，请重新登录。');
+  assert.equal(app.element('content').value, '尚未发布的草稿');
+  assert.equal(app.requests.length, 1);
+});

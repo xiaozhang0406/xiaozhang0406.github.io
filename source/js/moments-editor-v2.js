@@ -108,7 +108,7 @@
   window.addEventListener('message', event => {
     if (event.origin !== new URL(api).origin || event.data?.source !== 'moments-auth') return;
     if (event.data.ok) refreshSession().then(() => status('登录成功，可以发布了。', 'success'));
-    else status('登录未完成，请重试。', 'error');
+    else status(typeof event.data.error === 'string' ? event.data.error : '登录未完成，请重试。', 'error');
   });
   window.addEventListener('focus', refreshSession);
   find('logout').addEventListener('click', async () => {

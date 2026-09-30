@@ -14,6 +14,12 @@
 
 运行需要 Python 3.12，环境变量 `MOMENTS_APP_CONFIG` 指向私有应用配置文件，`MOMENTS_SETUP_KEY` 是仅用于首次创建应用的随机密钥，`MOMENTS_PORT` 默认为 13301。首次配置完成后，配置链接立即失效。服务器上应以独立 systemd 服务运行，只让 Caddy 把 `/moments-api/*` 转发到 `127.0.0.1:13301`。博客主页与其他服务器服务无需改动。
 
+## 当前服务器的 GitHub 连接修复
+
+2026-09-30 实测，服务器默认解析出的 GitHub 新加坡节点 `20.205.243.166` 连接 443 超时，而公开 DNS 返回的日本节点 `20.27.177.113` 可通过正常 HTTPS 证书校验连接。仅为 `moments-publisher.service` 挂载专用 hosts 文件：`/home/ubuntu/.config/moments-publisher/hosts`，配置位于 `/etc/systemd/system/moments-publisher.service.d/github-route.conf`，使用 `BindReadOnlyPaths=...:/etc/hosts`。系统的 `/etc/hosts` 和其他服务不变。
+
+此地址是本次验证时的快照；若 GitHub 调整地址，需要重新解析并验证 HTTPS 后更新专用 hosts 文件。回滚可移除该单独 drop-in、执行 `systemctl daemon-reload` 并重启碎碎念服务。不要关闭证书校验。登录连接失败会显示返回编辑页的按钮，并通知原编辑页保留草稿；授权码不写入页面、日志或存储。
+
 ## 检查
 
 `npm run test:moments` 覆盖旧版发布算法与新版服务端的文字、图片、重试、并发及无效数据；`npm run build` 生成页面。服务端 `/moments-api/health` 的 `ready` 表示 GitHub 应用是否已配置，不代表已经完成实际登录或发布。实际发布必须在博主登录后单独验收。

@@ -5,6 +5,7 @@ from pathlib import Path
 import re
 import tempfile
 import threading
+import time
 import unittest
 import urllib.error
 import urllib.parse
@@ -173,6 +174,32 @@ class MomentsServiceTests(unittest.TestCase):
             finally:
                 httpd.shutdown()
                 httpd.server_close()
+
+    def test_callback_network_failure_shows_return_action_without_leaking_code(self):
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        state = "network-error-test"
+        server.oauth_states[state] = (time.time() + 60, "test-verifier", server.FRONTEND)
+        url = f"http://127.0.0.1:{httpd.server_port}/moments-api/callback?code=private-test-code&state={state}"
+        try:
+            request = urllib.request.Request(url, headers={"Cookie": "moments_oauth=" + state})
+            with patch.object(server, "credentials", return_value=("test-id", "test-secret")), patch.object(
+                    server, "github_request", side_effect=server.PublicError("连接 GitHub 失败，内容仍保留在编辑框里。", 502)):
+                with self.assertRaises(urllib.error.HTTPError) as failure:
+                    urllib.request.urlopen(request, timeout=3)
+            response = failure.exception
+            self.assertEqual(response.code, 502)
+            self.assertEqual(response.headers.get_content_type(), "text/html")
+            page = response.read().decode()
+            self.assertIn("返回编辑页", page)
+            self.assertIn('"ok": false', page)
+            self.assertIn(server.FRONTEND, page)
+            for secret in ("private-test-code", "test-verifier", "test-secret"):
+                self.assertNotIn(secret, page)
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            server.oauth_states.pop(state, None)
 
 
 if __name__ == "__main__":
