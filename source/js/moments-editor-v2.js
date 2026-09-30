@@ -90,13 +90,16 @@
   }
   async function refreshSession() {
     try {
-      const session = await request('/session');
+      const session = await request('/session?check=' + Date.now());
+      if (typeof session.authenticated !== 'boolean') throw new Error('暂时无法确认登录状态，请重新点击登录。');
       updateAccount(session.authenticated ? session.login : null);
+      return Boolean(login);
     } catch (error) {
       updateAccount(null);
       const localPreview = ['localhost', '127.0.0.1', '::1'].includes(location.hostname);
       status(localPreview ? '这是本地预览；网页登录和发布请在正式网站使用。' : error.message,
         localPreview ? 'info' : 'error');
+      return false;
     }
   }
   find('login-button').addEventListener('click', () => {
@@ -107,7 +110,9 @@
   });
   window.addEventListener('message', event => {
     if (event.origin !== new URL(api).origin || event.data?.source !== 'moments-auth') return;
-    if (event.data.ok) refreshSession().then(() => status('登录成功，可以发布了。', 'success'));
+    if (event.data.ok) refreshSession().then(authenticated => {
+      if (authenticated) status('登录成功，可以发布了。', 'success');
+    });
     else status(typeof event.data.error === 'string' ? event.data.error : '登录未完成，请重试。', 'error');
   });
   window.addEventListener('focus', refreshSession);

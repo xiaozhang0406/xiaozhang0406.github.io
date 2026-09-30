@@ -37,7 +37,7 @@ test('login is detected when the script loads after the page lifecycle event', a
   const app = editor();
   await new Promise(setImmediate);
   assert.equal(app.requests.length, 1);
-  assert.equal(app.requests[0].url, 'https://planner.yarinaoshi.top/moments-api/session');
+  assert.match(app.requests[0].url, /^https:\/\/planner\.yarinaoshi\.top\/moments-api\/session\?check=\d+$/);
   assert.equal(app.requests[0].options.credentials, 'include');
   assert.equal(app.element('account').textContent, '已登录 GitHub：xiaozhang0406');
   assert.equal(app.element('login-panel').hidden, true);
