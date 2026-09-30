@@ -44,6 +44,7 @@ SETUP_KEY = os.environ.get("MOMENTS_SETUP_KEY", "")
 sessions = {}
 oauth_states = {}
 setup_states = {}
+recovery_states = {}
 state_lock = threading.Lock()
 publish_lock = threading.Lock()
 refresh_lock = threading.Lock()
@@ -436,7 +437,7 @@ class Handler(BaseHTTPRequestHandler):
             raise PublicError("配置链接无效。", 403)
         state = secrets.token_urlsafe(32)
         with state_lock:
-            setup_states[state] = time.time() + 600
+            setup_states[state] = time.time() + 3600
         manifest = {
             "name": "Yarinaoshi Moments",
             "url": FRONTEND + "/moments/",
@@ -465,7 +466,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; form-action https://github.com; base-uri 'none'; frame-ancestors 'none'")
-        self.send_header("Set-Cookie", f"moments_setup={state}; Path={BASE_PATH}; Max-Age=600; HttpOnly; Secure; SameSite=Lax")
+        self.send_header("Set-Cookie", f"moments_setup={state}; Path={BASE_PATH}; Max-Age=3600; HttpOnly; Secure; SameSite=Lax")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -475,8 +476,38 @@ class Handler(BaseHTTPRequestHandler):
         code = params.get("code", [""])[0]
         with state_lock:
             expires = setup_states.pop(state, 0)
-        if not code or expires < time.time() or not hmac.compare_digest(state, self.cookie("moments_setup") or ""):
-            raise PublicError("GitHub 应用配置校验失败，请重试。", 403)
+        if not code or not re.fullmatch(r"[A-Za-z0-9]+", code):
+            raise PublicError("GitHub 没有返回有效的配置码。", 403)
+        if expires < time.time() or not hmac.compare_digest(state, self.cookie("moments_setup") or ""):
+            return self.setup_recovery_page(code)
+        return self.complete_setup(code)
+
+    def setup_recovery_page(self, code):
+        if all(credentials()):
+            raise PublicError("GitHub 应用已经配置。", 409)
+        import html
+        recovery = secrets.token_urlsafe(32)
+        with state_lock:
+            recovery_states[recovery] = (time.time() + 600, code)
+        body = (
+            "<!doctype html><meta charset='utf-8'><title>继续配置碎碎念</title>"
+            "<h1>应用已创建，登录配置还差一步</h1>"
+            "<p>刚才的配置页停留较久，回跳校验超时。无需重新创建应用，点击下方按钮即可继续。</p>"
+            "<form method='post' action='" + BASE_PATH + "/setup/recover'>"
+            "<input type='hidden' name='recovery' value='" + html.escape(recovery, quote=True) + "'>"
+            "<button type='submit'>继续完成配置</button></form>"
+        ).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Content-Security-Policy", "default-src 'none'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'")
+        self.send_header("Set-Cookie", f"moments_recovery={recovery}; Path={BASE_PATH}; Max-Age=600; HttpOnly; Secure; SameSite=Lax")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def complete_setup(self, code):
         if all(credentials()):
             raise PublicError("GitHub 应用已经配置。", 409)
         app = api("/app-manifests/" + urllib.parse.quote(code, safe="") + "/conversions", "POST")
@@ -497,6 +528,8 @@ class Handler(BaseHTTPRequestHandler):
         self.redirect("https://github.com/apps/" + app["slug"] + "/installations/new")
 
     def do_POST(self):
+        if self.path == BASE_PATH + "/setup/recover":
+            return self.setup_recover()
         origin = self.headers.get("Origin")
         if origin not in ORIGINS:
             return self.send_json({"error": "不允许的来源。"}, 403)
@@ -525,6 +558,27 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json({"error": "发布内容格式不正确。"}, 400, origin)
         except Exception:
             self.send_json({"error": "保存失败，内容仍保留在编辑框里，请稍后重试。"}, 502, origin)
+
+    def setup_recover(self):
+        origin = self.headers.get("Origin")
+        if origin != "https://planner.yarinaoshi.top":
+            return self.send_json({"error": "不允许的来源。"}, 403)
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if not 0 < length < 2048:
+                raise PublicError("恢复请求无效。", 400)
+            data = urllib.parse.parse_qs(self.rfile.read(length).decode("utf-8"))
+            recovery = data.get("recovery", [""])[0]
+            with state_lock:
+                saved = recovery_states.pop(recovery, None)
+            if (not saved or saved[0] < time.time()
+                    or not hmac.compare_digest(recovery, self.cookie("moments_recovery") or "")):
+                raise PublicError("恢复链接已过期，请重新打开此页。", 403)
+            self.complete_setup(saved[1])
+        except PublicError as error:
+            self.send_json({"error": str(error)}, error.status)
+        except (ValueError, UnicodeDecodeError):
+            self.send_json({"error": "恢复请求无效。"}, 400)
 
 
 if __name__ == "__main__":
