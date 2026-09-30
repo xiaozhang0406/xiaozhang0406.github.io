@@ -178,8 +178,10 @@
   });
   window.addEventListener('pagehide', () => attachments.forEach(item => URL.revokeObjectURL(item.url)));
   window.addEventListener('pageshow', event => {
-    if (event.persisted) attachments.forEach(item => { item.url = URL.createObjectURL(item.file); });
+    if (!event.persisted) return;
+    attachments.forEach(item => { item.url = URL.createObjectURL(item.file); });
     refreshSession();
   });
   updateAccount(null);
+  refreshSession();
 })();
