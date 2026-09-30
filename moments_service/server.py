@@ -500,8 +500,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Cache-Control", "no-store")
-        self.send_header("Referrer-Policy", "no-referrer")
-        self.send_header("Content-Security-Policy", "default-src 'none'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'")
+        # Form POST needs a real Origin for CSRF checks; omit the callback query.
+        self.send_header("Referrer-Policy", "origin")
+        self.send_header("Content-Security-Policy", "default-src 'none'; form-action 'self' https://github.com; base-uri 'none'; frame-ancestors 'none'")
         self.send_header("Set-Cookie", f"moments_recovery={recovery}; Path={BASE_PATH}; Max-Age=3600; HttpOnly; Secure; SameSite=Lax")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()

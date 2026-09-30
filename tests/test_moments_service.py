@@ -1,8 +1,13 @@
 import base64
 import datetime as dt
 import json
+from pathlib import Path
+import re
+import tempfile
 import threading
 import unittest
+import urllib.error
+import urllib.parse
 import urllib.request
 from http.server import ThreadingHTTPServer
 from unittest.mock import patch
@@ -117,6 +122,57 @@ class MomentsServiceTests(unittest.TestCase):
         finally:
             httpd.shutdown()
             httpd.server_close()
+
+    def test_http_recovery_preserves_origin_and_rejects_untrusted_posts(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, req, fp, code, msg, headers, newurl):
+                return None
+
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+                server, "APP_CONFIG", Path(directory) / "app.json"):
+            httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
+            threading.Thread(target=httpd.serve_forever, daemon=True).start()
+            url = f"http://127.0.0.1:{httpd.server_port}/moments-api"
+            opener = urllib.request.build_opener(NoRedirect)
+            try:
+                with opener.open(url + "/setup/callback?code=testcode&state=expired", timeout=3) as response:
+                    self.assertEqual(response.headers["Referrer-Policy"], "origin")
+                    self.assertIn("form-action 'self' https://github.com", response.headers["Content-Security-Policy"])
+                    cookie = response.headers["Set-Cookie"].split(";", 1)[0]
+                    page = response.read().decode()
+                self.assertNotIn("testcode", page)
+                recovery = re.search("name='recovery' value='([^']+)'", page).group(1)
+                body = urllib.parse.urlencode({"recovery": recovery}).encode()
+
+                def post(origin, with_cookie=True):
+                    headers = {"Origin": origin, "Content-Type": "application/x-www-form-urlencoded"}
+                    if with_cookie:
+                        headers["Cookie"] = cookie
+                    request = urllib.request.Request(url + "/setup/recover", data=body, headers=headers)
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        opener.open(request, timeout=3)
+                    return error.exception
+
+                with patch.object(server, "api") as github:
+                    for origin in ("null", "https://evil.example"):
+                        self.assertEqual(post(origin).code, 403)
+                    github.assert_not_called()
+                    self.assertFalse(server.APP_CONFIG.exists())
+                    github.return_value = {"owner": {"id": server.OWNER_ID},
+                                           "permissions": {"contents": "write"},
+                                           "slug": "test-moments", "client_id": "test-id",
+                                           "client_secret": "test-secret"}
+                    result = post("https://planner.yarinaoshi.top")
+                    self.assertEqual(result.code, 302)
+                    self.assertEqual(result.headers["Location"],
+                                     "https://github.com/apps/test-moments/installations/new")
+                    github.assert_called_once_with("/app-manifests/testcode/conversions", "POST")
+                    self.assertEqual(server.credentials(), ("test-id", "test-secret"))
+                    self.assertEqual(post("https://planner.yarinaoshi.top").code, 403)
+                    github.assert_called_once()
+            finally:
+                httpd.shutdown()
+                httpd.server_close()
 
 
 if __name__ == "__main__":
