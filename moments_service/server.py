@@ -488,7 +488,7 @@ class Handler(BaseHTTPRequestHandler):
         import html
         recovery = secrets.token_urlsafe(32)
         with state_lock:
-            recovery_states[recovery] = (time.time() + 600, code)
+            recovery_states[recovery] = (time.time() + 3600, code)
         body = (
             "<!doctype html><meta charset='utf-8'><title>继续配置碎碎念</title>"
             "<h1>应用已创建，登录配置还差一步</h1>"
@@ -502,7 +502,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         self.send_header("Referrer-Policy", "no-referrer")
         self.send_header("Content-Security-Policy", "default-src 'none'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'")
-        self.send_header("Set-Cookie", f"moments_recovery={recovery}; Path={BASE_PATH}; Max-Age=600; HttpOnly; Secure; SameSite=Lax")
+        self.send_header("Set-Cookie", f"moments_recovery={recovery}; Path={BASE_PATH}; Max-Age=3600; HttpOnly; Secure; SameSite=Lax")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
