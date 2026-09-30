@@ -1,0 +1,35 @@
+@import '../../../source/css/moments.css';
+
+.memory-editor {
+  --font-color: var(--font-title-color);
+  --text-highlight-color: var(--font-title-color);
+  --card-meta: var(--font-p-color);
+  --card-bg: var(--pic-background-cover);
+  --global-bg: var(--container-background-color);
+  --card-box-shadow: 0 10px 35px #0000000b;
+  --card-hover-box-shadow: 0 12px 38px #7880d118;
+  --moments-accent: #7880d1;
+  --btn-hover-color: #6870bc;
+  --blockquote-bg: #939ad814;
+  min-height: 90vh;
+  padding: 130px 24px 80px;
+  background: var(--container-background-color);
+}
+.editor-width { width: min(100%, 1100px); margin: auto; }
+.memory-editor .moments-editor-heading h1 { font-size: 32px; margin-top: 20px; }
+.memory-editor .moment-card { border-radius: 18px; border: 1px solid #939ad814; padding: 30px; }
+.memory-editor .moments-auth { margin-bottom: 28px; }
+.memory-editor .moments-compose textarea { min-height: 210px; border-radius: 12px; }
+.memory-editor .moments-button, .memory-editor .moments-secondary { border-radius: 10px; padding: 11px 18px; font-size: 14px; }
+.memory-editor .moments-preview { min-height: 245px; }
+.memory-editor .moments-preview-label { margin-bottom: 15px; }
+.memory-editor .moments-muted { font-size: 14px; }
+.memory-editor .moments-small { font-size: 13px; }
+.memory-editor .moment-text { overflow-wrap: anywhere; }
+.memory-editor .moments-status { margin-top: 20px; border-radius: 12px; }
+.taxonomy-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+@media (max-width: 650px) {
+  .memory-editor { padding: 115px 18px 60px; }
+  .memory-editor .moment-card { padding: 24px 20px; }
+  .memory-editor .moments-editor-heading h1 { font-size: 27px; }
+}

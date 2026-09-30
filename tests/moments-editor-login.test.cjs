@@ -19,9 +19,10 @@ function editor() {
   const context = {
     document: {
       querySelector: () => root,
-      getElementById: id => element(id.replace('moments-', ''))
+      getElementById: id => element(id.replace('moments-', '')),
+      addEventListener() {}, removeEventListener() {}
     },
-    window: { addEventListener: (name, callback) => windowEvents.set(name, callback) },
+    window: { addEventListener: (name, callback) => windowEvents.set(name, callback), removeEventListener: name => windowEvents.delete(name) },
     location: { origin: 'https://yarinaoshi.top', hostname: 'yarinaoshi.top' },
     fetch: async (url, options) => {
       requests.push({ url, options });
@@ -30,7 +31,7 @@ function editor() {
     Intl, Date, URL
   };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../source/js/moments-editor-v2.js'), 'utf8'), context);
-  return { element, windowEvents, requests };
+  return { element, windowEvents, requests, dispose: () => root.momentsDispose() };
 }
 
 test('login is detected when the script loads after the page lifecycle event', async () => {
@@ -72,4 +73,13 @@ test('login failure displays the service message and preserves the draft', async
   assert.equal(app.element('status').textContent, '连接 GitHub 暂时失败，请重新登录。');
   assert.equal(app.element('content').value, '尚未发布的草稿');
   assert.equal(app.requests.length, 1);
+});
+
+test('leaving the Memory editor removes login listeners before another route mounts', async () => {
+  const app = editor();
+  await new Promise(setImmediate);
+  assert.ok(app.windowEvents.has('message'));
+  assert.ok(app.windowEvents.has('beforeunload'));
+  app.dispose();
+  assert.equal(app.windowEvents.size, 0);
 });

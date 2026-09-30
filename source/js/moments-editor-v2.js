@@ -2,8 +2,19 @@
   'use strict';
   const root = document.querySelector('.moments-editor');
   if (!root) return;
+  root.momentsDispose?.();
   const api = root.dataset.api;
-  const find = id => document.getElementById('moments-' + id);
+  const elements = new Map();
+  const find = id => {
+    if (!elements.has(id)) elements.set(id, document.getElementById('moments-' + id));
+    return elements.get(id);
+  };
+  let disposed = false;
+  const listeners = [];
+  function listen(target, name, callback, options) {
+    target.addEventListener(name, callback, options);
+    listeners.push(() => target.removeEventListener(name, callback, options));
+  }
   const content = find('content'), fileInput = find('images'), publishButton = find('publish');
   let attachments = [], draft = null, login = null, busy = false, selecting = false;
   const maxImages = 9, maxImageBytes = 8 * 1024 * 1024, maxTotalBytes = 32 * 1024 * 1024;
@@ -13,6 +24,7 @@
   }).format(date);
 
   function status(message, state = 'info') {
+    if (disposed) return;
     const element = find('status');
     element.hidden = !message;
     element.dataset.state = state;
@@ -38,6 +50,7 @@
       mime === 'image/gif' ? /^(GIF87a|GIF89a)/.test(text) : /^RIFF....WEBP/.test(text);
   }
   function update() {
+    if (disposed) return;
     const text = content.value, preview = find('preview-images'), thumbs = find('attachments');
     find('counter').textContent = text.length + ' / 4000';
     find('preview-content').textContent = text.trim() || (attachments.length ? '' : '你写下的文字和选择的图片会显示在这里。');
@@ -108,14 +121,14 @@
     status(popup ? '请在打开的 GitHub 窗口中完成登录，当前编辑内容会保留。' :
       '浏览器拦截了登录窗口，请允许弹出窗口后重试。', popup ? 'info' : 'error');
   });
-  window.addEventListener('message', event => {
+  listen(window, 'message', event => {
     if (event.origin !== new URL(api).origin || event.data?.source !== 'moments-auth') return;
     if (event.data.ok) refreshSession().then(authenticated => {
       if (authenticated) status('登录成功，可以发布了。', 'success');
     });
     else status(typeof event.data.error === 'string' ? event.data.error : '登录未完成，请重试。', 'error');
   });
-  window.addEventListener('focus', refreshSession);
+  listen(window, 'focus', refreshSession);
   find('logout').addEventListener('click', async () => {
     try {
       await request('/logout', { method: 'POST', body: '{}' });
@@ -178,15 +191,29 @@
     } catch (error) { status(error.message, 'error'); }
     finally { busy = false; update(); }
   });
-  window.addEventListener('beforeunload', event => {
+  listen(window, 'beforeunload', event => {
     if (content.value.trim() || attachments.length || busy) { event.preventDefault(); event.returnValue = ''; }
   });
-  window.addEventListener('pagehide', () => attachments.forEach(item => URL.revokeObjectURL(item.url)));
-  window.addEventListener('pageshow', event => {
+  listen(window, 'pagehide', () => attachments.forEach(item => URL.revokeObjectURL(item.url)));
+  listen(window, 'pageshow', event => {
     if (!event.persisted) return;
     attachments.forEach(item => { item.url = URL.createObjectURL(item.file); });
     refreshSession();
   });
+  listen(document, 'click', event => {
+    const link = event.target.closest?.('a[href]');
+    if (!link || link.target === '_blank' || (!content.value.trim() && !attachments.length && !busy)) return;
+    const destination = new URL(link.href, location.origin);
+    if (destination.origin === location.origin && destination.pathname === location.pathname) return;
+    if (busy || !window.confirm('还有未发布的内容，确定离开编辑页吗？')) {
+      event.preventDefault(); event.stopPropagation();
+    }
+  }, true);
+  root.momentsDispose = () => {
+    disposed = true;
+    listeners.forEach(remove => remove());
+    attachments.forEach(item => URL.revokeObjectURL(item.url));
+  };
   updateAccount(null);
   refreshSession();
 })();

@@ -1,0 +1,5 @@
+node_modules/
+dist/
+src/preview/content.generated.json
+public/
+*.log

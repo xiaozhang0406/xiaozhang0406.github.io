@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate",
+    "build": "hexo clean && hexo generate && npm --prefix memory-blog run build && node memory-blog/scripts/assemble-site.mjs",
+    "check:memory": "npm --prefix memory-blog run check:content && node --test tests/memory-deployment.test.cjs",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "server": "hexo server",
