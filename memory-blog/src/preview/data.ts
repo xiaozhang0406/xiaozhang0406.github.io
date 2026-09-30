@@ -1,6 +1,11 @@
 import content from './content.generated.json';
 
 export const site = content.site;
+export const imagery = content.imagery;
+export const pageBackground = (pathname: string) => {
+  const page = pathname === '/' ? 'home' : /^\/about/.test(pathname) ? 'about' : /^\/(archives|times)/.test(pathname) ? 'archive' : /^\/(friends|link)/.test(pathname) ? 'friends' : /^\/(moments|talk)/.test(pathname) ? 'moments' : 'default';
+  return imagery.backgrounds[page];
+};
 export const articles = content.articles;
 export const categories = content.categories;
 export const tags = content.tags;

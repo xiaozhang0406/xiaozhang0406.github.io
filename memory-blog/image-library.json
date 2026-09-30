@@ -1,0 +1,28 @@
+{
+  "images": [
+    { "id": "winter-street", "src": "/img/mahiro/winter-street.jpg", "title": "樱花下的日常", "source": "https://onimai.jp/episode/12.html", "original": "https://onimai.jp/episode/img/12_03.jpg", "credit": "ねことうふ・一迅社／おにまい製作委員会" },
+    { "id": "snow-trip", "src": "/img/mahiro/snow-trip.jpg", "title": "冬日出游", "source": "https://onimai.jp/episode/12.html", "original": "https://onimai.jp/episode/img/12_01.jpg", "credit": "ねことうふ・一迅社／おにまい製作委員会" },
+    { "id": "winter-school", "src": "/img/mahiro/winter-school.jpg", "title": "校服与眨眼", "source": "https://onimai.jp/episode/10.html", "original": "https://onimai.jp/episode/img/10_01.jpg", "credit": "ねことうふ・一迅社／おにまい製作委員会" },
+    { "id": "bookshelf", "src": "/img/mahiro/bookshelf.jpg", "title": "书店里的真寻", "source": "https://haowallpaper.com/homeViewLook/17854453243956608", "original": "https://haowallpaper.com/link/common/file/previewFileImg/17854408786627968", "credit": "Onimai anime still, shared by 抹茶大饼 on 哲风壁纸" },
+    { "id": "school-chat", "src": "/img/mahiro/school-chat.jpg", "title": "开心的课间", "source": "https://onimai.jp/episode/10.html", "original": "https://onimai.jp/episode/img/10_02.jpg", "credit": "ねことうふ・一迅社／おにまい製作委員会" },
+    { "id": "winter-trip", "src": "/img/mahiro/winter-trip.jpg", "title": "和朋友一起出门", "source": "https://onimai.jp/episode/12.html", "original": "https://onimai.jp/episode/img/12_02.jpg", "credit": "ねことうふ・一迅社／おにまい製作委員会" },
+    { "id": "street", "src": "/img/mahiro/street.jpg", "title": "午后街道", "source": "https://www.duitang.com/blog/?id=1459346582", "original": "https://c-ssl.dtstatic.com/uploads/blog/202303/14/20230314024504_f75b6.thumb.1000_0.jpg", "credit": "Onimai anime still, shared on 堆糖" },
+    { "id": "sunset-selfie", "src": "/img/mahiro/sunset-selfie.jpg", "title": "夕阳下的自拍", "source": "https://www.pinterest.com/pin/mahiro-oyama--579416308329022664/", "original": "https://i.pinimg.com/736x/ec/ae/83/ecae8384969d62ab7dbbe44676e2ee4b.jpg", "credit": "Onimai anime still, shared on Pinterest" },
+    { "id": "sleepover", "src": "/img/mahiro/sleepover.jpg", "title": "朋友们的日常", "source": "https://onimai.jp/episode/08.html", "original": "https://onimai.jp/episode/img/08_05.jpg", "credit": "ねことうふ・一迅社／おにまい製作委員会" },
+    { "id": "night-desktop", "src": "/img/mahiro/night-desktop.jpg", "title": "夜晚的电脑桌", "source": "https://www.pinterest.com/pin/mahiro-oyama--315603886408007905/", "original": "https://i.pinimg.com/1200x/e2/a9/f1/e2a9f1e98b3def03aab37c6a2436d7dc.jpg", "credit": "Artist not identified in the source listing; shared on Pinterest" }
+  ],
+  "backgrounds": {
+    "home": "winter-street",
+    "about": "street",
+    "archive": "sunset-selfie",
+    "friends": "winter-trip",
+    "moments": "sleepover",
+    "default": "winter-street"
+  },
+  "featured": "snow-trip",
+  "coverPool": ["winter-school", "bookshelf", "school-chat", "night-desktop", "winter-trip", "street", "sunset-selfie", "sleepover"],
+  "articles": {
+    "2026-7-31-A-surver-command": { "cover": "winter-school", "readCover": "school-chat" },
+    "2026-07-22-hello-world": { "cover": "bookshelf", "readCover": "winter-trip" }
+  }
+}

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import matter from 'gray-matter';
 
 const appRoot = fileURLToPath(new URL('../', import.meta.url));
@@ -33,4 +34,17 @@ assert.ok(index.includes('index, follow'));
 assert.ok(!index.includes('noindex'));
 assert.match(generated.editorScript, /^\/js\/moments-editor\.[a-f0-9]{16}\.js$/);
 assert.ok(!index.includes('http://127.0.0.1:8080'));
+const library = JSON.parse(await readFile(path.join(appRoot, 'image-library.json'), 'utf8'));
+const imageHashes = new Set();
+for (const image of library.images) {
+  const bytes = await readFile(path.join(appRoot, 'dist', image.src));
+  const hash = createHash('sha256').update(bytes).digest('hex');
+  assert.ok(!imageHashes.has(hash), `Duplicate picture in library: ${image.id}`);
+  imageHashes.add(hash);
+}
+const homepagePictures = [generated.imagery.backgrounds.home, generated.imagery.featured, ...generated.articles.map(article => article.cover)];
+if (generated.articles.length <= library.coverPool.length) {
+  assert.equal(new Set(homepagePictures).size, homepagePictures.length, 'Homepage background, featured image and article covers must differ while the pool has enough pictures');
+}
 console.log(`Content checks passed: ${expected.length} public articles, ${hiddenIds.length} hidden posts excluded, original review preserved, profile and production entry verified.`);
+console.log(`Image checks passed: ${library.images.length} distinct local pictures; homepage slots use different pictures.`);

@@ -10,10 +10,5 @@
   "email": "xiaozhang0406@proton.me",
   "qq": "3357728637",
   "blog": "https://yarinaoshi.top",
-  "icp": "闽ICP备2026029739号-1",
-  "projects": [
-    { "title": "MP2980 电源模块", "description": "记录电力电子与电源模块项目中的设计、调试和学习。" },
-    { "title": "STM32 + VESC", "description": "学习 STM32 主控板与 VESC 电机驱动相关硬件。" },
-    { "title": "Linux 与 Minecraft", "description": "学习 Linux 运维，搭建与管理 Minecraft 服务器。" }
-  ]
+  "icp": "闽ICP备2026029739号-1"
 }

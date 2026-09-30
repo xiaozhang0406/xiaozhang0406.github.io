@@ -2,7 +2,7 @@ import { Avatar, Tag } from 'antd';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SocialButton from '../components/Buttons/SocialButton';
-import { articlePath, articles, asset, site, type Article } from './data';
+import { articlePath, articles, asset, imagery, site, type Article } from './data';
 import '../frontHome/Content/ContentHome/index.sass';
 
 export function ArticleCard({ article, index = 0 }: { article: Article; index?: number }) {
@@ -38,7 +38,7 @@ export default function Home() {
     </section>
     <section className="ContentContainer dark-pic" id="articles" aria-label="博客文章">
       {latest && <Link className="TopArticle" to={articlePath(latest.id)}>
-        <div className="Top">✦ 最新文章</div><div className="TopCover"><img src={asset(latest.cover)} alt="" className="fade-in-out show" /><span className="thumbnail-screen" /></div>
+        <div className="Top">✦ 最新文章</div><div className="TopCover"><img src={asset(imagery.featured)} alt="" className="fade-in-out show" /><span className="thumbnail-screen" /></div>
         <div className="topContent"><h4># {latest.categories.join(' / ')}</h4><h3 className="contentTitle">{latest.title}</h3><p>{latest.description}</p><div className="tags">{latest.tags.map(tag => <Tag color="#939ad8" key={tag}>{tag}</Tag>)}</div>
           <div className="topFooter"><Avatar src={asset('/img/avatar.png')} size={36} /><span>{latest.author}</span><time>{latest.date}</time></div>
         </div>

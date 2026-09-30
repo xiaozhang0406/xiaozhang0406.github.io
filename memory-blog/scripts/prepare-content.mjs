@@ -9,11 +9,21 @@ const appRoot = fileURLToPath(new URL('../', import.meta.url));
 const blogRoot = path.resolve(appRoot, '..');
 const readJson = async name => JSON.parse(await readFile(path.join(blogRoot, name), 'utf8'));
 const site = JSON.parse(await readFile(path.join(appRoot, 'site.json'), 'utf8'));
+const library = JSON.parse(await readFile(path.join(appRoot, 'image-library.json'), 'utf8'));
+const imageById = new Map(library.images.map(image => [image.id, image.src]));
+const libraryImage = id => {
+  if (!imageById.has(id)) throw new Error(`Unknown image in image-library.json: ${id}`);
+  return imageById.get(id);
+};
+const imagery = {
+  backgrounds: Object.fromEntries(Object.entries(library.backgrounds).map(([page, id]) => [page, libraryImage(id)])),
+  featured: libraryImage(library.featured)
+};
 const categories = new Set();
 const tags = new Set();
 const articles = [];
 const list = value => value == null ? [] : Array.isArray(value) ? value.flat().map(String) : [String(value)];
-const sourceUrl = value => typeof value === 'string' && value.startsWith('/') ? value : '/img/yarinaoshi.jpg';
+const sourceUrl = value => typeof value === 'string' && (value.startsWith('/') || /^https:\/\//.test(value)) ? value : null;
 for (const file of await readdir(path.join(blogRoot, 'source/_posts'))) {
   if (!file.endsWith('.md')) continue;
   const raw = await readFile(path.join(blogRoot, 'source/_posts', file), 'utf8');
@@ -34,6 +44,23 @@ for (const file of await readdir(path.join(blogRoot, 'source/_posts'))) {
   });
 }
 articles.sort((a, b) => b.date.localeCompare(a.date));
+// Keep existing covers stable; distribute new default covers without repeats until the pool is used.
+const usedCovers = new Set([imagery.featured, imagery.backgrounds.home]);
+for (const article of articles) {
+  const selection = library.articles[article.id];
+  article.cover ||= selection ? libraryImage(selection.cover) : null;
+  if (article.cover) usedCovers.add(article.cover);
+}
+const pool = library.coverPool.map(libraryImage);
+let nextCover = 0;
+for (const article of articles) {
+  if (!article.cover) {
+    article.cover = pool.find(src => !usedCovers.has(src)) || pool[nextCover++ % pool.length];
+    usedCovers.add(article.cover);
+  }
+  const selection = library.articles[article.id];
+  article.readCover = selection ? libraryImage(selection.readCover) : article.cover;
+}
 const friendGroups = yaml.load(await readFile(path.join(blogRoot, 'source/_data/link.yml'), 'utf8'));
 const friends = (friendGroups || []).filter(group => group.class_name === '友情链接').flatMap(group => group.link_list || []).filter(friend => friend.link !== site.blog).map(friend => ({
   name: friend.name, url: friend.link, avatar: friend.avatar, description: String(friend.descr).replace(/<br\s*\/?>/g, ' ')
@@ -41,10 +68,10 @@ const friends = (friendGroups || []).filter(group => group.class_name === '友�
 const moments = await readJson('source/_data/moments.json');
 const editorSource = (await readFile(path.join(blogRoot, 'source/js/moments-editor-v2.js'), 'utf8')).replace(/\r\n/g, '\n');
 const editorScript = '/js/moments-editor.' + createHash('sha256').update(editorSource).digest('hex').slice(0, 16) + '.js';
-const output = { site, articles, categories: [...categories], tags: [...tags], friends, moments: moments.entries, editorScript };
+const output = { site, imagery, articles, categories: [...categories], tags: [...tags], friends, moments: moments.entries, editorScript };
 await mkdir(path.join(appRoot, 'src/preview'), { recursive: true });
 await writeFile(path.join(appRoot, 'src/preview/content.generated.json'), JSON.stringify(output, null, 2) + '\n');
-const imagePaths = new Set(['/img/avatar.png', '/img/yarinaoshi.jpg', '/img/favicon.ico', ...articles.map(article => article.cover), ...friends.map(friend => friend.avatar), ...moments.entries.flatMap(entry => entry.images.map(image => image.src))]);
+const imagePaths = new Set(['/img/avatar.png', '/img/favicon.ico', ...library.images.map(image => image.src), ...articles.flatMap(article => [article.cover, article.readCover]), ...friends.map(friend => friend.avatar), ...moments.entries.flatMap(entry => entry.images.map(image => image.src))]);
 for (const imagePath of imagePaths) {
   if (!imagePath.startsWith('/img/') || imagePath.includes('..')) continue;
   const destination = path.join(appRoot, 'public', imagePath);

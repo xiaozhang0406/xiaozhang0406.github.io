@@ -16,7 +16,6 @@ import 'github-markdown-css/github-markdown-light.css';
 
 const prompts = [
   { question: '你在学习什么？', answer: '我目前主要学习 PCB 设计、电力电子和嵌入式开发，也在向软件与 Linux 运维方向扩展技能树。' },
-  { question: '最近在做什么？', answer: '在做 MP2980 电源模块、STM32 主控板与 VESC 电机驱动相关项目，也会折腾 Minecraft 服务器。项目过程里的踩坑和学习会记在博客里。' },
   { question: '在哪里读书？', answer: `我在${site.school}，${site.education}。` },
   { question: '怎么联系你？', answer: `GitHub：xiaozhang0406，Email：${site.email}，QQ：${site.qq}。欢迎交流。` }
 ];
@@ -32,7 +31,6 @@ export function About() {
     <div className="chatbot memory-chat" aria-label="关于我的互动介绍"><div className="chat-messages" aria-live="polite">{messages.map((message, index) => <div className={`chat-row ${message.from}`} key={index}>{message.from === 'me' && <Avatar src={asset('/img/avatar.png')} />}<p>{message.text}</p></div>)}</div>
       <div className="chat-prompts">{prompts.filter(prompt => !asked.includes(prompt.question)).map(prompt => <Button key={prompt.question} onClick={() => { setMessages(previous => [...previous, { text: prompt.question, from: 'visitor' }, { text: prompt.answer, from: 'me' }]); setAsked(previous => [...previous, prompt.question]); }}>{prompt.question}</Button>)}{asked.length > 0 && <Button type="text" onClick={() => { setMessages(messages.slice(0, 2)); setAsked([]); }}>重新聊聊 ↺</Button>}</div>
     </div>
-    <div className="about-projects">{site.projects.map(project => <article key={project.title}><span>正在探索</span><h2>{project.title}</h2><p>{project.description}</p></article>)}</div>
     <div className="about-contact"><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={`mailto:${site.email}`}>Email ↗</a><span>QQ {site.qq}</span></div>
   </section>;
 }
@@ -64,7 +62,7 @@ export function ReadArticle() {
   const { id } = useParams();
   const article = articles.find(item => item.id === id);
   if (!article) return <section className="preview-page"><Empty description="没有找到这篇文章" /><Link to="/">回到首页</Link></section>;
-  return <article className="readContainer memory-read"><div className="readCover"><img src={asset(article.cover)} alt="" /><div className="readInfo"><div className="read-author"><Avatar src={asset('/img/avatar.png')} />{article.author}</div><h1>{article.title}</h1><time dateTime={article.date}>{article.date}</time></div></div>
+  return <article className="readContainer memory-read"><div className="readCover"><img src={asset(article.readCover)} alt="" /><div className="readInfo"><div className="read-author"><Avatar src={asset('/img/avatar.png')} />{article.author}</div><h1>{article.title}</h1><time dateTime={article.date}>{article.date}</time></div></div>
     <div className="readDescription"><strong>文章简介</strong><p>{article.description}</p></div>
     <div className="readContent markdown-body"><Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]} components={{ img: ({ src, alt }) => <img src={asset(src || '')} alt={alt || ''} loading="lazy" />, a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer">{children}</a> }}>{article.content}</Markdown></div>
     <div className="read-return"><Link to="/archives/">← 查看其他文章</Link><Link to="/">返回首页 →</Link></div>

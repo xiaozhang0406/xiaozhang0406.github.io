@@ -6,7 +6,7 @@ import Home from './Home';
 import { About, Archive, Category, Friends, ReadArticle, Talks, Taxonomy } from './Pages';
 import MomentsEditor from './MomentsEditor';
 import BottomMenu from '../components/BottomMenu';
-import { articles, asset, site } from './data';
+import { articles, asset, pageBackground, site } from './data';
 import '../frontHome/main.css';
 import '../App.sass';
 import './preview.css';
@@ -29,7 +29,7 @@ function Layout() {
     document.title = `${article?.title || page || site.name} · ${article || page ? site.name : 'Memory'}`;
   }, [location.pathname]);
   return <ConfigProvider theme={{ algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm, token: { colorPrimary: '#7880d1', borderRadius: 12 } }}>
-    <div className={`frontRoot${isDark ? ' frontDark' : ''}`} style={{ '--memory-background': `url("${asset('/img/yarinaoshi.jpg')}")` } as React.CSSProperties}>
+    <div className={`frontRoot${isDark ? ' frontDark' : ''}`} style={{ '--memory-background': `url("${asset(pageBackground(location.pathname))}")` } as React.CSSProperties}>
       <Head isDark={isDark} setDark={setDark} scrollHeight={scrollHeight} />
       <main><Outlet /></main>
       <footer className="footerContainer">
