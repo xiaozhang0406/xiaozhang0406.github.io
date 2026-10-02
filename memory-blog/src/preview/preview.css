@@ -5,7 +5,7 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; }
 button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid #939ad8; outline-offset: 4px; }
 .frontRoot { min-height: 100vh; color: var(--font-title-color); background-image: var(--front-body-color), var(--memory-background); }
-.memory-header { position: sticky; top: 0; z-index: 100; width: 100%; height: 0; }
+.memory-header { position: sticky; top: 0; z-index: 100; width: 100%; height: 0; display: flow-root; }
 .headContainer.preview-head { position: relative; z-index: 2; min-height: 68px; padding: 0 18px; gap: 20px; color: var(--font-title-color); background: transparent; backdrop-filter: none; box-shadow: none; width: calc(100% - 32px); margin: 16px; border-radius: 0; display: flex; }
 .headContainer.preview-head:hover { background: transparent; }
 .scrolled .preview-head { margin: 0; width: 100%; border-radius: 0; }
