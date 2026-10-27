@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Avatar, Button, Empty, Image, Tag, Timeline } from 'antd';
+import { Avatar, Empty, Image, Tag, Timeline } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -14,24 +13,54 @@ import '../frontHome/Content/Times/index.sass';
 import '../frontHome/Content/Talk/index.sass';
 import 'github-markdown-css/github-markdown-light.css';
 
-const prompts = [
-  { question: '你在学习什么？', answer: '我目前主要学习 PCB 设计、电力电子和嵌入式开发，也在向软件与 Linux 运维方向扩展技能树。' },
-  { question: '在哪里读书？', answer: `我在${site.school}，${site.education}。` },
-  { question: '怎么联系你？', answer: `GitHub：xiaozhang0406，Email：${site.email}，QQ：${site.qq}。欢迎交流。` }
-];
-
 export function About() {
-  const [messages, setMessages] = useState<{ text: string; from: 'me' | 'visitor' }[]>([
-    { text: `你好，这里是 ${site.name} の Blog 👋`, from: 'me' },
-    { text: `我是 ${site.name}，${site.school}，${site.education}。这里用来记录学习、折腾和一点日常。`, from: 'me' }
-  ]);
-  const [asked, setAsked] = useState<string[]>([]);
   return <section className="AboutContainer memory-about">
-    <div className="about-heading"><Avatar size={88} src={asset('/img/avatar.png')} /><h1>认识一下，{site.name}</h1><p>{site.description}</p></div>
-    <div className="chatbot memory-chat" aria-label="关于我的互动介绍"><div className="chat-messages" aria-live="polite">{messages.map((message, index) => <div className={`chat-row ${message.from}`} key={index}>{message.from === 'me' && <Avatar src={asset('/img/avatar.png')} />}<p>{message.text}</p></div>)}</div>
-      <div className="chat-prompts">{prompts.filter(prompt => !asked.includes(prompt.question)).map(prompt => <Button key={prompt.question} onClick={() => { setMessages(previous => [...previous, { text: prompt.question, from: 'visitor' }, { text: prompt.answer, from: 'me' }]); setAsked(previous => [...previous, prompt.question]); }}>{prompt.question}</Button>)}{asked.length > 0 && <Button type="text" onClick={() => { setMessages(messages.slice(0, 2)); setAsked([]); }}>重新聊聊 ↺</Button>}</div>
-    </div>
-    <div className="about-contact"><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={`mailto:${site.email}`}>Email ↗</a><span>QQ {site.qq}</span></div>
+    <article className="self-intro" aria-labelledby="self-intro-title">
+      <header className="intro-heading">
+        <div className="intro-heading-copy">
+          <p className="intro-eyebrow">SELF INTRO <span aria-hidden="true">／</span> 关于我</p>
+          <h1 id="self-intro-title">你好，<br />这里是 <span>{site.name}</span>。</h1>
+          <p className="intro-subtitle">还在摸索，也还保留着好奇心。</p>
+          <div className="intro-author"><Avatar size={36} src={asset('/img/avatar.png')} /><span>{site.name}<small>学习、折腾，还有生活。</small></span></div>
+        </div>
+        <figure className="intro-photo"><img src={asset('/img/mahiro/street.jpg')} alt="午后街道上微笑的真寻" width="1000" height="998" /><figcaption>给日常留一个小小的角落。</figcaption></figure>
+      </header>
+      <div className="intro-body">
+        <p>我在福建理工大学读工业工程，现在大二。如果你问我以后想做什么，我大概还没办法给出一个很确定的答案。不过，感兴趣的东西倒是一直不少。</p>
+        <p>比起用几个标签介绍自己，我更想在这里慢慢写一点：我在折腾什么，在想什么，还有一些暂时没想明白的事。</p>
+
+        <section aria-labelledby="intro-learning">
+          <h2 id="intro-learning">从一块电路板，到一个小网站</h2>
+          <p>我喜欢那些能亲手做出点东西的事。画 PCB，折腾 STM32，写一点 Python，在 Linux 里敲敲命令，或者像现在这样，给自己的博客改一个页面。</p>
+          <p>这些东西看起来有点散，但对我来说，吸引人的地方其实差不多：脑子里冒出一个想法，然后一点点把它变成真的能运行的东西。哪怕最后只是一个很小的功能，做出来的那一刻也会觉得，嗯，今天没白折腾。</p>
+          <p>当然，更多时候还是在看资料、报错、返工。有些问题卡了很久才弄懂，有些东西学过又忘了，就再翻出来看一遍。这里会留下这些过程，算是给以后的自己留点线索。</p>
+        </section>
+
+        <section aria-labelledby="intro-curiosity">
+          <h2 id="intro-curiosity">还没想清楚，也想继续试试</h2>
+          <p>我也会迷茫。想学的东西很多，时间和精力却没那么多；有时候想一口气把什么都学会，有时候又连眼前的一件小事都不太想动。</p>
+          <p>专业、兴趣、以后要走的路，暂时还没有被我整理成一个很清楚的计划。我一边摸索，一边调整，也会怀疑自己是不是绕了远路。</p>
+          <p>不过，好奇心还在。看到一个有意思的电路、一段没看懂的代码，或者一个想自己做出来的小东西，还是会忍不住想再试试。现在的我，大概就是在这种状态里慢慢往前走。</p>
+        </section>
+
+        <section aria-labelledby="intro-lab">
+          <h2 id="intro-lab">想有一个自己的电子实验室</h2>
+          <p>如果说有什么一直很想实现的愿望，那就是有一个属于自己的电子实验室。</p>
+          <p>不用特别大。有一张能安心折腾的工作台，放得下电源、示波器和焊台，旁边收着各种元器件，还有几块正在调试的板子。想到什么，就可以坐下来慢慢做；没做完的东西，也不用急着收走。</p>
+          <p>光是想象那个角落，就会觉得挺期待的。离它可能还有一段距离，那就从手上的小项目开始，一点点攒经验，也一点点攒出那个空间。</p>
+        </section>
+
+        <section aria-labelledby="intro-blog">
+          <h2 id="intro-blog">所以，留下了这个博客</h2>
+          <p>我想给自己的学习和生活留一个角落。这里会有技术笔记、踩坑记录，也会有日常、碎碎念，和一些当时很想写下来的想法。</p>
+          <p>有些文章可能不够完整，有些想法过一阵子还会变。没关系，先记下来。等以后回头看，至少能知道，那时候的我在关心什么，又是怎么一点点走过来的。</p>
+          <p>至于页面上的二次元元素，原因也很简单：我喜欢。自己的小地方，就想放一点自己看着会开心的东西。</p>
+          <p>如果这里恰好有一篇文章帮到了你，或者只是让你愿意多停留一会儿，我都会很开心。谢谢你看到这里，欢迎随便逛逛。</p>
+        </section>
+        <div className="intro-signoff"><span>{site.name}</span><p>写于 <time dateTime="2026">2026 年秋</time></p></div>
+      </div>
+      <footer className="intro-footer"><p>也欢迎来打个招呼。</p><div className="about-contact"><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={`mailto:${site.email}`}>Email ↗</a><span>QQ {site.qq}</span></div></footer>
+    </article>
   </section>;
 }
 

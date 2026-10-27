@@ -77,18 +77,40 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .preview-page, .memory-about, .memory-friends, .memory-archive, .memory-talks { min-height: 85vh; padding: 135px 24px 80px; background: var(--container-background-color); color: var(--font-title-color); }
 .preview-page { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .preview-page .allArticles { width: min(100%, 1160px); margin-top: 20px; }
-.about-heading { text-align: center; max-width: 720px; margin: 0 auto 35px; }
-.about-heading h1 { font-size: 30px; margin: 18px 0; }
-.about-heading p { line-height: 1.8; color: var(--font-p-color); }
-.memory-chat { background: var(--pic-background-cover); border-radius: 18px; padding: 30px; box-shadow: 0 10px 35px #0001; }
-.chat-messages { display: grid; gap: 18px; }
-.chat-row { display: flex; gap: 12px; align-items: flex-start; }
-.chat-row .ant-avatar { flex-shrink: 0; margin-top: 4px; }
-.chat-row p { background: #939ad819; padding: 14px 18px; border-radius: 4px 16px 16px; line-height: 1.9; font-size: 14px; max-width: 90%; }
-.chat-row.visitor { justify-content: flex-end; }
-.chat-row.visitor p { background: #7880d1; color: white; border-radius: 16px 4px 16px 16px; }
-.chat-prompts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; padding-left: 44px; }
-.about-contact { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-top: 35px; color: #939ad8; font-size: 14px; }
+.frontRoot:has(.memory-about) .scrolled .preview-head { background: var(--pic-background-cover); box-shadow: 0 1px 0 #939ad822; }
+.memory-about { justify-content: flex-start; }
+.self-intro { --intro-ink: #454654; --intro-muted: #727384; --intro-accent: #636da5; width: min(100%, 1000px); background: #fdfcfbf5; border: 1px solid #fff9; border-radius: 24px; box-shadow: 0 20px 70px #45436616; overflow: hidden; }
+.intro-heading { display: grid; grid-template-columns: minmax(0, 1fr) 230px; align-items: center; gap: 40px; padding: 52px 64px 44px; background: linear-gradient(120deg, #eeedf987, #fceee459); }
+.intro-eyebrow { color: var(--intro-accent); font-size: 12px; font-weight: 600; letter-spacing: .16em; }
+.intro-eyebrow span { margin: 0 8px; opacity: .4; }
+.intro-heading h1 { margin: 24px 0 18px; font-size: clamp(28px, 3.3vw, 44px); line-height: 1.5; font-weight: 600; letter-spacing: -.025em; color: var(--intro-ink); }
+.intro-heading h1 span { color: var(--intro-accent); }
+.intro-subtitle { font-size: 15px; line-height: 1.9; color: var(--intro-muted); }
+.intro-author { display: flex; align-items: center; gap: 11px; margin-top: 26px; color: var(--intro-ink); font-size: 13px; }
+.intro-author small { display: block; font-size: 11px; color: var(--intro-muted); margin-top: 4px; }
+.intro-photo { padding: 9px 9px 0; background: #fff; border-radius: 5px; box-shadow: 0 8px 30px #5a537619; transform: rotate(3deg); }
+.intro-photo img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 2px; }
+.intro-photo figcaption { padding: 12px 2px; text-align: center; color: #737080; font-size: 11px; letter-spacing: .06em; }
+.intro-body { max-width: 792px; padding: 44px 48px 36px; margin: 0 auto; color: var(--intro-ink); font-size: 16px; line-height: 2.15; overflow-wrap: anywhere; }
+.intro-body p { margin: 0 0 20px; }
+.intro-body section { margin-top: 42px; }
+.intro-body h2 { margin: 0 0 22px; padding-left: 16px; border-left: 3px solid #a6acd6; font-size: 21px; line-height: 1.65; font-weight: 600; color: var(--intro-ink); }
+.intro-signoff { margin-top: 40px; text-align: right; }
+.intro-signoff > span { color: var(--intro-accent); font-size: 22px; font-family: Georgia, serif; font-style: italic; }
+.intro-signoff p { color: var(--intro-muted); font-size: 12px; margin: 4px 0 0; }
+.intro-footer { margin: 0 64px; padding: 28px 0 34px; border-top: 1px solid #939ad82b; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 18px; color: var(--intro-muted); font-size: 13px; }
+.about-contact { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; color: var(--intro-accent); font-size: 13px; }
+.about-contact a { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #939ad866; }
+.about-contact a:hover { text-decoration-color: currentColor; }
+.frontDark .self-intro { --intro-ink: #dcdce5; --intro-muted: #aaa9bd; --intro-accent: #b4bbea; background: #23232df5; border-color: #939ad833; }
+.frontDark .intro-heading { background: linear-gradient(120deg, #939ad81a, #d2a2b30a); }
+.frontDark .intro-photo { background: #363540; }
+.frontDark .intro-photo figcaption { color: #c3bfce; }
+@media (max-width: 800px) {
+  .intro-heading { grid-template-columns: minmax(0, 1fr) 180px; gap: 28px; padding: 36px; }
+  .intro-body { padding: 36px; }
+  .intro-footer { margin: 0 36px; }
+}
 .memory-archive .timePass { height: auto; max-width: 800px; width: 100%; margin-bottom: 45px; gap: 15px; }
 .memory-archive .timeLine { width: min(100%, 800px); }
 .memory-archive .timeLine time { color: #939ad8; display: block; font-size: 13px; margin-bottom: 10px; }
@@ -185,11 +207,16 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .ArticleFooter { margin-top: 26px; }
   .ArticleFooter time { width: 100%; margin-left: 45px; }
   .preview-page, .memory-about, .memory-friends, .memory-archive, .memory-talks { padding: 115px 18px 60px; }
-  .about-heading h1 { font-size: 25px; }
-  .memory-chat { width: 100% !important; padding: 20px 14px; }
-  .chat-row { gap: 9px; }
-  .chat-row p { padding: 12px; font-size: 13px; max-width: 100%; }
-  .chat-prompts { padding-left: 0; }
+  .memory-about { padding: 98px 12px 40px; }
+  .self-intro { border-radius: 18px; }
+  .intro-heading { grid-template-columns: minmax(0, 1fr); gap: 26px; padding: 30px 24px; }
+  .intro-heading h1 { font-size: clamp(26px, 7vw, 36px); margin-top: 18px; }
+  .intro-photo { width: 168px; justify-self: center; }
+  .intro-body { padding: 30px 24px; font-size: 16px; line-height: 2; }
+  .intro-body section { margin-top: 34px; }
+  .intro-body h2 { font-size: 19px; padding-left: 12px; }
+  .intro-footer { margin: 0 24px; padding: 24px 0 30px; }
+  .about-contact { gap: 18px; }
   .link-items { grid-template-columns: minmax(0, 1fr); }
   .memory-read .readCover { height: 360px; }
   .memory-read .readInfo h1 { font-size: 25px; }
