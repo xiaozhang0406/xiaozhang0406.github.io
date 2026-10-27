@@ -22,7 +22,7 @@ for (const id of hiddenIds) assert.ok(!generated.articles.some(article => articl
 assert.equal(generated.site.name, 'Yarinaoshi');
 assert.equal(generated.site.github, 'https://github.com/xiaozhang0406');
 assert.equal(generated.site.email, 'xiaozhang0406@proton.me');
-assert.equal(generated.friends.length, 3);
+assert.equal(generated.friends.length, 4);
 assert.equal(generated.moments.length, JSON.parse(await readFile(path.join(appRoot, '../source/_data/moments.json'), 'utf8')).entries.length);
 const originalReview = matter(await readFile(path.join(postRoot, '2026-7-31-A-surver-command.md'), 'utf8')).content;
 assert.equal(generated.articles.find(article => article.id === '2026-7-31-A-surver-command').content, originalReview);

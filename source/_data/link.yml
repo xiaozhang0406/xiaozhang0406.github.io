@@ -17,6 +17,10 @@
       link: https://aurlemon.top/
       avatar: /img/lemon-avatar.png
       descr: AurLemon 的个人网站！
+    - name: BG7QVU 之居
+      link: https://bg7qvu.cn/
+      avatar: https://tc-chn-sh.cos.bg7qvu.cn/blog/avatar.png
+      descr: 筚路蓝缕，以起山林。记录那些科技与生活。
 
 - class_name: 框架与主题
   class_desc: 本站使用的框架和主题
