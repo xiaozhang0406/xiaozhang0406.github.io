@@ -1,0 +1,61 @@
+.article-share-action {
+  width: min(92%, 880px);
+  margin: 12px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.article-share-action [role="alert"] { color: var(--font-title-color); }
+.article-share-preview { max-height: 65vh; overflow: auto; background: #e9e7f2; }
+.article-share-preview img { display: block; width: 100%; }
+
+.share-paper-stage { position: fixed; top: 0; left: -10000px; pointer-events: none; }
+.share-paper {
+  box-sizing: border-box;
+  width: 760px;
+  padding: 44px;
+  background: #eeecf8;
+  color: #28243b;
+  font: 18px/1.7 system-ui, "Microsoft YaHei", sans-serif;
+  overflow-wrap: anywhere;
+}
+.share-paper-header {
+  padding: 34px 36px;
+  border-radius: 22px 22px 0 0;
+  background: linear-gradient(145deg, #403366, #685793);
+  color: #fff;
+}
+.share-paper-brand { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+.share-paper-brand span, .share-paper-header p { color: #e3dcef; }
+.share-paper-header h1 { margin: 20px 0 12px; color: #fff; font-size: 38px; line-height: 1.3; text-wrap: balance; }
+.share-paper-header p { margin: 0; font-size: 15px; }
+.share-paper .share-paper-body {
+  box-sizing: border-box;
+  padding: 36px;
+  background: #fff;
+  color: #28243b;
+  font: inherit;
+  text-align: left;
+}
+.share-paper-body h2 { color: #493b6e; border-bottom: 1px solid #e8e2f1; }
+.share-paper-body a { color: #5c4890; text-decoration: underline; }
+.share-paper-body img { max-width: 100%; height: auto; border-radius: 10px; }
+.share-paper-body summary { display: block; font-weight: 600; }
+.share-paper-body pre, .share-paper-body pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.share-paper-body table { display: table; max-width: 100%; table-layout: fixed; }
+.share-paper-image-note { padding: 12px; background: #f4f1f9; color: #54486d; }
+.share-paper-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 36px;
+  border-top: 1px solid #e7e0f0;
+  border-radius: 0 0 22px 22px;
+  background: #f8f6fc;
+  color: #54486d;
+  font-size: 15px;
+}

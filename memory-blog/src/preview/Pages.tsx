@@ -1,10 +1,12 @@
 import { Avatar, Empty, Image, Tag, Timeline } from 'antd';
+import { useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import { ArticleCard } from './Home';
+import { ArticleShare } from './ArticleShare';
 import { articlePath, articles, asset, categories, friends, moments, site, tags } from './data';
 import '../frontHome/Content/AboutMe/index.sass';
 import '../frontHome/Content/FriendList/index.sass';
@@ -89,11 +91,13 @@ export function Friends() {
 
 export function ReadArticle() {
   const { id } = useParams();
+  const content = useRef<HTMLDivElement>(null);
   const article = articles.find(item => item.id === id);
   if (!article) return <section className="preview-page"><Empty description="没有找到这篇文章" /><Link to="/">回到首页</Link></section>;
   return <article className="readContainer memory-read"><div className="readCover"><img src={asset(article.readCover)} alt="" /><div className="readInfo"><div className="read-author"><Avatar src={asset('/img/avatar.png')} />{article.author}</div><h1>{article.title}</h1><time dateTime={article.date}>{article.date}</time></div></div>
     <div className="readDescription"><strong>文章简介</strong><p>{article.description}</p></div>
-    <div className="readContent markdown-body"><Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]} components={{ img: ({ src, alt }) => <img src={asset(src || '')} alt={alt || ''} loading="lazy" />, a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer">{children}</a> }}>{article.content}</Markdown></div>
+    <ArticleShare key={article.id} article={article} content={content} />
+    <div ref={content} className="readContent markdown-body"><Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]} components={{ img: ({ src, alt }) => <img src={asset(src || '')} alt={alt || ''} loading="lazy" />, a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer">{children}</a> }}>{article.content}</Markdown></div>
     <div className="read-return"><Link to="/archives/">← 查看其他文章</Link><Link to="/">返回首页 →</Link></div>
   </article>;
 }
