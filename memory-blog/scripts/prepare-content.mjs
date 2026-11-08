@@ -1,13 +1,11 @@
 import { readFile, readdir, mkdir, writeFile, copyFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { createHash } from 'node:crypto';
 import matter from 'gray-matter';
 import yaml from 'js-yaml';
 
 const appRoot = fileURLToPath(new URL('../', import.meta.url));
 const blogRoot = path.resolve(appRoot, '..');
-const readJson = async name => JSON.parse(await readFile(path.join(blogRoot, name), 'utf8'));
 const site = JSON.parse(await readFile(path.join(appRoot, 'site.json'), 'utf8'));
 const library = JSON.parse(await readFile(path.join(appRoot, 'image-library.json'), 'utf8'));
 const imageById = new Map(library.images.map(image => [image.id, image.src]));
@@ -65,19 +63,14 @@ const friendGroups = yaml.load(await readFile(path.join(blogRoot, 'source/_data/
 const friends = (friendGroups || []).filter(group => group.class_name === '友情链接').flatMap(group => group.link_list || []).filter(friend => friend.link !== site.blog).map(friend => ({
   name: friend.name, url: friend.link, avatar: friend.avatar, description: String(friend.descr).replace(/<br\s*\/?>/g, ' ')
 }));
-const moments = await readJson('source/_data/moments.json');
-const editorSource = (await readFile(path.join(blogRoot, 'source/js/moments-editor-v2.js'), 'utf8')).replace(/\r\n/g, '\n');
-const editorScript = '/js/moments-editor.' + createHash('sha256').update(editorSource).digest('hex').slice(0, 16) + '.js';
-const output = { site, imagery, articles, categories: [...categories], tags: [...tags], friends, moments: moments.entries, editorScript };
+const output = { site, imagery, articles, categories: [...categories], tags: [...tags], friends };
 await mkdir(path.join(appRoot, 'src/preview'), { recursive: true });
 await writeFile(path.join(appRoot, 'src/preview/content.generated.json'), JSON.stringify(output, null, 2) + '\n');
-const imagePaths = new Set(['/img/avatar.png', '/img/favicon.ico', ...library.images.map(image => image.src), ...articles.flatMap(article => [article.cover, article.readCover]), ...friends.map(friend => friend.avatar), ...moments.entries.flatMap(entry => entry.images.map(image => image.src))]);
+const imagePaths = new Set(['/img/avatar.png', '/img/favicon.ico', ...library.images.map(image => image.src), ...articles.flatMap(article => [article.cover, article.readCover]), ...friends.map(friend => friend.avatar)]);
 for (const imagePath of imagePaths) {
   if (!imagePath.startsWith('/img/') || imagePath.includes('..')) continue;
   const destination = path.join(appRoot, 'public', imagePath);
   await mkdir(path.dirname(destination), { recursive: true });
   await copyFile(path.join(blogRoot, 'source', imagePath), destination);
 }
-console.log(`Prepared ${articles.length} published articles, ${friends.length} friends, ${moments.entries.length} moments. Hidden notes excluded.`);
-await mkdir(path.join(appRoot, 'public/js'), { recursive: true });
-await writeFile(path.join(appRoot, 'public', editorScript), editorSource);
+console.log(`Prepared ${articles.length} published articles and ${friends.length} friends. Hidden notes excluded.`);

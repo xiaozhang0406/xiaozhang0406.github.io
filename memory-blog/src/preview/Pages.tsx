@@ -1,4 +1,4 @@
-import { Avatar, Empty, Image, Tag, Timeline } from 'antd';
+import { Avatar, Empty, Tag, Timeline } from 'antd';
 import { useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Markdown from 'react-markdown';
@@ -7,12 +7,11 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import { ArticleCard } from './Home';
 import { ArticleShare } from './ArticleShare';
-import { articlePath, articles, asset, categories, friends, moments, site, tags } from './data';
+import { articlePath, articles, asset, categories, friends, site, tags } from './data';
 import '../frontHome/Content/AboutMe/index.sass';
 import '../frontHome/Content/FriendList/index.sass';
 import '../frontHome/Content/ReadArticle/index.sass';
 import '../frontHome/Content/Times/index.sass';
-import '../frontHome/Content/Talk/index.sass';
 import 'github-markdown-css/github-markdown-light.css';
 
 export function About() {
@@ -100,11 +99,4 @@ export function ReadArticle() {
     <div ref={content} className="readContent markdown-body"><Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]} components={{ img: ({ src, alt }) => <img src={asset(src || '')} alt={alt || ''} loading="lazy" />, a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer">{children}</a> }}>{article.content}</Markdown></div>
     <div className="read-return"><Link to="/archives/">← 查看其他文章</Link><Link to="/">返回首页 →</Link></div>
   </article>;
-}
-
-export function Talks() {
-  const dateLabel = (value: string) => new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(value));
-  return <section className="TalkContainer memory-talks"><div className="talk-heading"><h1>碎碎念</h1><p>一些不成篇的日常。</p><Link to="/moments/edit/">写一条 ↗</Link></div>
-    {moments.length ? [...moments].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).map(moment => <article className="memory-moment" id={`moment-${moment.id}`} key={moment.id}><div className="moment-person"><Avatar src={asset('/img/avatar.png')} /><strong>{site.name}</strong><time dateTime={moment.createdAt}>{dateLabel(moment.createdAt)}</time></div>{moment.content && <p>{moment.content}</p>}<Image.PreviewGroup><div className="moment-images">{moment.images.map(image => <Image src={asset(image.src)} alt={image.alt} key={image.src} />)}</div></Image.PreviewGroup></article>) : <div className="moment-empty"><span>✧</span><h2>留住一闪而过的念头</h2><p>一句话、一张照片，都可以放在这里。</p><Link to="/moments/edit/">写下第一条 →</Link></div>}
-  </section>;
 }

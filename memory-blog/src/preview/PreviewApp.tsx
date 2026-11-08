@@ -3,8 +3,7 @@ import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from 'react-r
 import { ConfigProvider, theme } from 'antd';
 import Head from './Head';
 import Home from './Home';
-import { About, Archive, Category, Friends, ReadArticle, Talks, Taxonomy } from './Pages';
-import MomentsEditor from './MomentsEditor';
+import { About, Archive, Category, Friends, ReadArticle, Taxonomy } from './Pages';
 import BottomMenu from '../components/BottomMenu';
 import { articles, asset, pageBackground, site } from './data';
 import '../frontHome/main.css';
@@ -25,7 +24,7 @@ function Layout() {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     const pathname = decodeURIComponent(location.pathname);
     const article = articles.find(item => pathname === `/posts/${item.id}/` || pathname === `/article/${item.id}`);
-    const page = pathname.startsWith('/moments/edit') ? '写碎碎念' : pathname.startsWith('/moments') || pathname.startsWith('/talk') ? '碎碎念' : pathname.startsWith('/archives') || pathname.startsWith('/times') ? '归档' : pathname.startsWith('/link') || pathname.startsWith('/friends') ? '友人链' : pathname.startsWith('/about') ? '关于我' : '';
+    const page = pathname.startsWith('/archives') || pathname.startsWith('/times') ? '归档' : pathname.startsWith('/link') || pathname.startsWith('/friends') ? '友人链' : pathname.startsWith('/about') ? '关于我' : '';
     document.title = `${article?.title || page || site.name} · ${article || page ? site.name : 'Memory'}`;
   }, [location.pathname]);
   return <ConfigProvider theme={{ algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm, token: { colorPrimary: '#7880d1', borderRadius: 12 } }}>
@@ -51,9 +50,6 @@ export default function PreviewApp() {
     <Route path="archives/*" element={<Archive />} />
     <Route path="friends" element={<Friends />} />
     <Route path="link" element={<Friends />} />
-    <Route path="talk" element={<Talks />} />
-    <Route path="moments" element={<Talks />} />
-    <Route path="moments/edit" element={<MomentsEditor />} />
     <Route path="category/:id" element={<Category />} />
     <Route path="categories" element={<Taxonomy />} />
     <Route path="categories/:id" element={<Category />} />

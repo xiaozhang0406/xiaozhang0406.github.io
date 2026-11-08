@@ -74,7 +74,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .footerContainer { padding: 36px 20px; text-align: center; font-size: 13px; background: var(--pic-background-cover); color: var(--font-p-color); line-height: 2.1; }
 .footerContainer a { color: #7880d1; }
 .footer-motto { margin: 8px 0; }
-.preview-page, .memory-about, .memory-friends, .memory-archive, .memory-talks { min-height: 85vh; padding: 135px 24px 80px; background: var(--container-background-color); color: var(--font-title-color); }
+.preview-page, .memory-about, .memory-friends, .memory-archive { min-height: 85vh; padding: 135px 24px 80px; background: var(--container-background-color); color: var(--font-title-color); }
 .preview-page { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .preview-page .allArticles { width: min(100%, 1160px); margin-top: 20px; }
 .frontRoot:has(.memory-about) .scrolled .preview-head { background: var(--pic-background-cover); box-shadow: 0 1px 0 #939ad822; }
@@ -149,22 +149,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .frontDark .memory-read .readDescription { background: #939ad821; box-shadow: none; }
 .frontDark .memory-read .readDescription p { color: var(--font-p-color); }
 .read-return { width: min(90%, 820px); display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; padding: 30px 0 65px; color: #939ad8; }
-.memory-talks { display: flex; align-items: center; flex-direction: column; }
-.talk-heading { width: min(100%, 760px); position: relative; margin-bottom: 40px; }
-.talk-heading h1 { font-size: 32px; margin-bottom: 15px; }
-.talk-heading p { color: var(--font-p-color); }
-.talk-heading > a { position: absolute; right: 0; top: 4px; border-radius: 20px; background: #7880d1; color: white; padding: 10px 18px; font-size: 14px; }
-.moment-empty { width: min(100%, 760px); text-align: center; background: var(--pic-background-cover); padding: 65px 25px; border-radius: 18px; }
-.moment-empty > span { display: inline-block; font-size: 50px; color: #939ad8; margin-bottom: 22px; }
-.moment-empty h2 { font-size: 23px; }
-.moment-empty p { margin: 22px 0; color: var(--font-p-color); }
-.moment-empty a { color: #939ad8; }
-.memory-moment { width: min(100%, 760px); padding: 28px; background: var(--pic-background-cover); border-radius: 18px; margin-bottom: 25px; }
-.moment-person { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
-.moment-person time { margin-left: auto; font-size: 12px; color: var(--font-p-color); }
-.memory-moment > p { white-space: pre-wrap; line-height: 1.9; margin: 22px 0; }
-.moment-images { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.moment-images .ant-image img { aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
 @media (max-width: 1300px) {
   .memory-navigation { gap: 6px; }
   .preview-head-actions { gap: 10px; }
@@ -206,7 +190,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .ContentContainer .allArticles .ArticleCard, .preview-page .ArticleCard { height: auto; min-height: 490px; grid-template-rows: 180px 1fr; }
   .ArticleFooter { margin-top: 26px; }
   .ArticleFooter time { width: 100%; margin-left: 45px; }
-  .preview-page, .memory-about, .memory-friends, .memory-archive, .memory-talks { padding: 115px 18px 60px; }
+  .preview-page, .memory-about, .memory-friends, .memory-archive { padding: 115px 18px 60px; }
   .memory-about { padding: 98px 12px 40px; }
   .self-intro { border-radius: 18px; }
   .intro-heading { grid-template-columns: minmax(0, 1fr); gap: 26px; padding: 30px 24px; }
@@ -222,9 +206,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .memory-read .readInfo h1 { font-size: 25px; }
   .memory-read .readContent { padding: 18px 5px; width: 90%; }
   .memory-read .readDescription { width: 90%; padding: 20px; }
-  .talk-heading h1 { font-size: 27px; }
-  .moment-person time { margin-left: 44px; width: 100%; }
-  .moment-images { grid-template-columns: repeat(2, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

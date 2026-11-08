@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -22,8 +22,7 @@ async function collect(directory, prefix = '') {
 await collect(output);
 const titles = {
   '/': 'Yarinaoshi · Memory', '/about/': '关于我', '/archives/': '归档', '/times/': '归档',
-  '/link/': '友人链', '/friends/': '友人链', '/moments/': '碎碎念', '/talk/': '碎碎念',
-  '/moments/edit/': '写碎碎念', '/categories/': '分类', '/tags/': '标签'
+  '/link/': '友人链', '/friends/': '友人链', '/categories/': '分类', '/tags/': '标签'
 };
 for (const [url, title] of Object.entries(titles)) routes.set(url, { title, description: content.site.description });
 for (const article of content.articles) {
@@ -37,6 +36,11 @@ for (const category of content.categories) {
 }
 for (const tag of content.tags) routes.set('/tags/' + tag + '/', { title: '标签 · ' + tag, description: content.site.description });
 await cp(path.join(app, 'dist'), output, { recursive: true });
+// Archived publisher files must not be copied to the public site by Hexo or Vite.
+for (const file of await readdir(path.join(output, 'js'))) {
+  if (/^moments[.-].*\.js$|^moments\.js$/.test(file)) await rm(path.join(output, 'js', file), { force: true });
+}
+await rm(path.join(output, 'css', 'moments.css'), { force: true });
 for (const [url, metadata] of routes) {
   const destination = path.join(output, url.slice(1), 'index.html');
   const title = url === '/' ? metadata.title : metadata.title + ' · ' + content.site.name;
@@ -50,7 +54,7 @@ for (const [url, metadata] of routes) {
 await writeFile(path.join(output, '404.html'), shell.replace('index, follow', 'noindex, follow'));
 await writeFile(path.join(output, '.nojekyll'), '');
 await writeFile(path.join(output, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${content.site.blog}/sitemap.xml\n`);
-const sitemap = ['/','/about/','/archives/','/link/','/moments/', ...content.articles.map(article => '/posts/' + article.id + '/')];
+const sitemap = ['/','/about/','/archives/','/link/', ...content.articles.map(article => '/posts/' + article.id + '/')];
 await writeFile(path.join(output, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + sitemap.map(url => `<url><loc>${escape(content.site.blog + url)}</loc></url>`).join('') + '</urlset>\n');
 await cp(path.join(app, 'LICENSE'), path.join(output, 'MEMORY-LICENSE.txt'));
-console.log(`Memory site prepared at the domain root: ${routes.size} routes, ${content.articles.length} articles, ${content.moments.length} moments. Existing image and publishing assets retained.`);
+console.log(`Memory site prepared at the domain root: ${routes.size} routes, ${content.articles.length} articles.`);

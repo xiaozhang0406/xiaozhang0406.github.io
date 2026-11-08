@@ -11,7 +11,6 @@ type Props = { isDark: boolean; setDark: React.Dispatch<React.SetStateAction<boo
 const links = [
   { to: '/', label: '首页', icon: 'icon-shouye4' },
   { to: '/archives/', label: '归档', icon: 'icon-guidang3' },
-  { to: '/moments/', label: '碎碎念', icon: 'icon-liaotian1' },
   { to: '/link/', label: '友人链', icon: 'icon-lianjie' },
   { to: '/about/', label: '关于我', icon: 'icon-leaf-01' }
 ];
